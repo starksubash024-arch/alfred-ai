@@ -113,46 +113,65 @@ with col_upload:
         label_visibility="collapsed",
     )
 
+    # Track processed files in session state to prevent infinite rerun loops
+    if "processed_upload_ids" not in st.session_state:
+        st.session_state.processed_upload_ids = set()
+    if "upload_results" not in st.session_state:
+        st.session_state.upload_results = []
+
     if uploaded_files:
-        st.markdown("**Processing uploads…**")
-        for ufile in uploaded_files:
-            file_bytes = ufile.read()
-            progress_bar = st.progress(0.0, text=f"Processing {ufile.name}…")
+        def get_file_key(f):
+            return f"{f.name}_{f.size}"
 
-            def make_cb(bar):
-                def cb(pct, msg):
-                    bar.progress(min(pct, 1.0), text=msg)
-                return cb
+        new_files = [f for f in uploaded_files if get_file_key(f) not in st.session_state.processed_upload_ids]
 
-            with st.spinner(f"Indexing {ufile.name}…"):
-                result = rag_engine.ingest_pdf(
-                    file_bytes=file_bytes,
-                    filename=ufile.name,
-                    progress_callback=make_cb(progress_bar),
-                )
+        if new_files:
+            st.markdown("**Processing uploads…**")
+            for ufile in new_files:
+                file_bytes = ufile.read()
+                progress_bar = st.progress(0.0, text=f"Processing {ufile.name}…")
 
-            progress_bar.empty()
+                def make_cb(bar):
+                    def cb(pct, msg):
+                        bar.progress(min(pct, 1.0), text=msg)
+                    return cb
 
-            if result.get("duplicate"):
-                st.info(
-                    f"⚡ **{ufile.name}** is already indexed "
-                    f"({result['page_count']} pages, {result['chunk_count']} chunks). "
-                    "Skipping duplicate."
-                )
-            elif result["success"]:
-                st.success(
-                    f"✅ **{ufile.name}** indexed successfully — "
-                    f"{result['page_count']} pages, {result['chunk_count']} chunks "
-                    f"in {result['processing_ms']} ms."
-                )
-                for w in result.get("warnings", []):
-                    st.warning(f"⚠️ {w}")
-            else:
-                st.error(f"❌ **{ufile.name}** — {result.get('error', 'Unknown error')}")
+                with st.spinner(f"Indexing {ufile.name}…"):
+                    result = rag_engine.ingest_pdf(
+                        file_bytes=file_bytes,
+                        filename=ufile.name,
+                        progress_callback=make_cb(progress_bar),
+                    )
 
-        # Refresh page stats after upload
-        st.cache_data.clear()
-        st.rerun()
+                progress_bar.empty()
+                st.session_state.processed_upload_ids.add(get_file_key(ufile))
+                st.session_state.upload_results.append((ufile.name, result))
+
+            st.rerun()
+
+        # Display results from the upload
+        if st.session_state.upload_results:
+            for fname, result in st.session_state.upload_results:
+                if result.get("duplicate"):
+                    st.info(
+                        f"⚡ **{fname}** is already indexed "
+                        f"({result['page_count']} pages, {result['chunk_count']} chunks). "
+                        "Skipping duplicate."
+                    )
+                elif result["success"]:
+                    st.success(
+                        f"✅ **{fname}** indexed successfully — "
+                        f"{result['page_count']} pages, {result['chunk_count']} chunks "
+                        f"in {result['processing_ms']} ms."
+                    )
+                    for w in result.get("warnings", []):
+                        st.warning(f"⚠️ {w}")
+                else:
+                    st.error(f"❌ **{fname}** — {result.get('error', 'Unknown error')}")
+    else:
+        # Clear tracking when uploader is emptied
+        st.session_state.processed_upload_ids.clear()
+        st.session_state.upload_results.clear()
 
 # ════════════════════════════════════════════════════════════════════════════════
 # RIGHT — Recent documents
