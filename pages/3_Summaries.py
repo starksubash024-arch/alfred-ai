@@ -95,7 +95,7 @@ st.markdown(
 )
 
 # Prominent primary button across the full section width
-run_btn = st.button("✨ Generate Summary", type="primary", use_container_width=True)
+run_btn = st.button("✨ Generate Summary", type="primary", use_container_width=True, key="btn_generate_summary")
 
 # ── Summary generation ─────────────────────────────────────────────────────────
 if run_btn:
