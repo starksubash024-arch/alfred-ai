@@ -10,11 +10,15 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from pathlib import Path
 import streamlit as st
+import importlib
 
 import database as db
 from components.sidebar import render_sidebar
 from config import APP_NAME, OLLAMA_MODEL
 from llm_service import check_ollama
+
+import summarizer
+importlib.reload(summarizer)
 from summarizer import summarise_document, generate_extractive_summary
 
 st.set_page_config(
