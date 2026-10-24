@@ -69,34 +69,33 @@ if not indexed_docs:
     )
     st.stop()
 
-sel_col, mode_col, btn_col = st.columns([3, 2, 1.5])
-with sel_col:
+col1, col2 = st.columns([1.6, 1], gap="medium")
+with col1:
     doc_map = {d["filename"]: d for d in indexed_docs}
     chosen_name = st.selectbox("Select document to summarise",
                                list(doc_map.keys()),
                                label_visibility="visible")
 
-with mode_col:
+with col2:
     summary_mode = st.radio(
         "Summarisation Mode",
         ["⚡ Instant Extraction (Fast & Offline)", "🤖 AI Map-Reduce (Local LLM)"],
         horizontal=False,
     )
 
-with btn_col:
-    st.markdown("<br>", unsafe_allow_html=True)
-    run_btn = st.button("▶ Generate Summary", type="primary", use_container_width=True)
-
 chosen_doc = doc_map[chosen_name]
 
 st.markdown(
-    f'<div class="glass-panel" style="padding:0.8rem 1.2rem; margin-bottom:0.5rem;">'
+    f'<div class="glass-panel" style="padding:0.8rem 1.2rem; margin:0.8rem 0;">'
     f'<b>📄 {chosen_doc["filename"]}</b> &nbsp;·&nbsp; '
     f'{chosen_doc.get("page_count", 0)} pages &nbsp;·&nbsp; '
     f'{chosen_doc.get("chunk_count", 0)} chunks'
     f'</div>',
     unsafe_allow_html=True,
 )
+
+# Prominent primary button across the full section width
+run_btn = st.button("✨ Generate Summary", type="primary", use_container_width=True)
 
 # ── Summary generation ─────────────────────────────────────────────────────────
 if run_btn:
