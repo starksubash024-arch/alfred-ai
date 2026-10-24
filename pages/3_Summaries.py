@@ -15,7 +15,7 @@ import database as db
 from components.sidebar import render_sidebar
 from config import APP_NAME, OLLAMA_MODEL
 from llm_service import check_ollama
-from summarizer import summarise_document
+from summarizer import summarise_document, generate_extractive_summary
 
 st.set_page_config(
     page_title=f"Summaries — {APP_NAME}",
@@ -33,10 +33,8 @@ load_css()
 render_sidebar()
 
 st.markdown(
-    """
-    <div class="page-title">📝 Summaries</div>
-    <div class="page-subtitle">AI-generated summaries grounded in your documents.</div>
-    """,
+    """<div class="page-title">📝 Summaries</div>
+<div class="page-subtitle">AI-generated summaries grounded in your documents.</div>""",
     unsafe_allow_html=True,
 )
 
@@ -47,9 +45,10 @@ def _check():
 
 ollama = _check()
 if not ollama["available"]:
-    st.error(
-        "Ollama is not running. Summaries require a local LLM. "
-        f"Start Ollama and pull `{OLLAMA_MODEL}` to continue."
+    st.info(
+        "ℹ️ **Ollama is currently offline.** "
+        "You can still generate instant document summaries using the **⚡ Instant Extraction** mode below. "
+        f"To enable generative AI synthesis, start Ollama and run `ollama pull {OLLAMA_MODEL}`."
     )
 
 # ── Document selector ──────────────────────────────────────────────────────────
@@ -57,40 +56,41 @@ indexed_docs = [d for d in db.list_documents() if d["status"] == "indexed"]
 
 if not indexed_docs:
     st.markdown(
-        """
-        <div class="empty-state">
-            <div class="empty-state-icon">📂</div>
-            <div class="empty-state-title">No indexed documents</div>
-            <div class="empty-state-text">
-                Upload and index a PDF on the Dashboard first.
-            </div>
-        </div>
-        """,
+        """<div class="empty-state">
+<div class="empty-state-icon">📂</div>
+<div class="empty-state-title">No indexed documents</div>
+<div class="empty-state-text">Upload and index a PDF on the Dashboard first.</div>
+</div>""",
         unsafe_allow_html=True,
     )
     st.stop()
 
-sel_col, btn_col = st.columns([4, 1])
+sel_col, mode_col, btn_col = st.columns([3, 2, 1.5])
 with sel_col:
     doc_map = {d["filename"]: d for d in indexed_docs}
     chosen_name = st.selectbox("Select document to summarise",
                                list(doc_map.keys()),
                                label_visibility="visible")
+
+with mode_col:
+    summary_mode = st.radio(
+        "Summarisation Mode",
+        ["⚡ Instant Extraction (Fast & Offline)", "🤖 AI Map-Reduce (Local LLM)"],
+        horizontal=False,
+    )
+
 with btn_col:
     st.markdown("<br>", unsafe_allow_html=True)
-    run_btn = st.button("▶ Generate Summary", type="primary", use_container_width=True,
-                        disabled=not ollama["available"])
+    run_btn = st.button("▶ Generate Summary", type="primary", use_container_width=True)
 
 chosen_doc = doc_map[chosen_name]
 
 st.markdown(
-    f"""
-    <div class="glass-panel" style="padding:0.8rem 1.2rem; margin-bottom:0.5rem;">
-        <b>📄 {chosen_doc['filename']}</b> &nbsp;·&nbsp;
-        {chosen_doc.get('page_count',0)} pages &nbsp;·&nbsp;
-        {chosen_doc.get('chunk_count',0)} chunks
-    </div>
-    """,
+    f'<div class="glass-panel" style="padding:0.8rem 1.2rem; margin-bottom:0.5rem;">'
+    f'<b>📄 {chosen_doc["filename"]}</b> &nbsp;·&nbsp; '
+    f'{chosen_doc.get("page_count", 0)} pages &nbsp;·&nbsp; '
+    f'{chosen_doc.get("chunk_count", 0)} chunks'
+    f'</div>',
     unsafe_allow_html=True,
 )
 
@@ -98,17 +98,26 @@ st.markdown(
 if run_btn:
     chunks = db.get_chunks_for_doc(chosen_doc["id"])
     if not chunks:
-        st.error("No text chunks found for this document. Try reindexing it.")
+        st.error("No text chunks found for this document. Try reindexing it from the Document Library.")
         st.stop()
 
-    with st.spinner(
-        f"Generating summary using map-reduce "
-        f"({min(len(chunks), 20)} of {len(chunks)} chunks)…"
-    ):
-        result = summarise_document(chunks)
+    if "Instant Extraction" in summary_mode:
+        with st.spinner("Extracting executive overview, key topics, and dates/figures…"):
+            result = generate_extractive_summary(chunks, filename=chosen_doc["filename"])
+    else:
+        # LLM mode
+        if not ollama["available"]:
+            st.warning("Ollama is not running. Automatically using Instant Extraction mode instead.")
+            with st.spinner("Extracting executive overview, key topics, and dates/figures…"):
+                result = generate_extractive_summary(chunks, filename=chosen_doc["filename"])
+                result["mode_notice"] = "Generated via instant extraction because Ollama is currently offline."
+        else:
+            with st.spinner(f"Generating summary via Ollama ({min(len(chunks), 20)} chunks)…"):
+                result = summarise_document(chunks)
 
     st.session_state["last_summary"] = result
     st.session_state["last_summary_doc"] = chosen_name
+    st.rerun()
 
 # ── Display summary ────────────────────────────────────────────────────────────
 summary = st.session_state.get("last_summary")
@@ -145,8 +154,7 @@ if summary:
                 for i, topic in enumerate(summary["main_topics"]):
                     with cols[i % len(cols)]:
                         st.markdown(
-                            f'<div class="glass-panel" style="text-align:center;">'
-                            f'<b>{topic}</b></div>',
+                            f'<div class="glass-panel" style="text-align:center;"><b>{topic}</b></div>',
                             unsafe_allow_html=True,
                         )
 

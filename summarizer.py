@@ -77,6 +77,7 @@ def _call_llm(prompt: str, model: str = OLLAMA_MODEL) -> Optional[str]:
     payload = {
         "model":  model,
         "stream": False,
+        "format": "json",
         "options": {"temperature": 0.1},
         "messages": [{"role": "user", "content": prompt}],
     }
@@ -95,23 +96,164 @@ def _call_llm(prompt: str, model: str = OLLAMA_MODEL) -> Optional[str]:
 
 def _parse_json(text: str) -> dict:
     """Extract and parse a JSON block from LLM output."""
-    # Try to find a JSON block between ``` markers
+    if not text:
+        return {}
     import re
-    match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
-    if match:
-        text = match.group(1)
-    # Otherwise try to parse the whole string
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
+        cleaned = re.sub(r"\s*```$", "", cleaned)
     try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        # Last resort: find first { … } block
-        match = re.search(r"\{.*\}", text, re.DOTALL)
-        if match:
-            try:
-                return json.loads(match.group())
-            except Exception:
-                pass
+        return json.loads(cleaned)
+    except Exception:
+        pass
+
+    # Try finding outer-most braces { ... }
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        try:
+            return json.loads(text[start:end+1])
+        except Exception:
+            pass
     return {}
+
+
+# ── Extractive Fallback Summarizer ──────────────────────────────────────────────
+
+def generate_extractive_summary(chunks: list[dict], filename: str = "") -> dict:
+    """
+    Extract structured summaries directly from text chunks using NLP heuristics.
+    Used when Ollama is offline or as a fast, instant summarisation mode.
+    Guaranteed to succeed and never fail with connection timeouts.
+    """
+    import re
+
+    if not chunks:
+        return {"error": "No text chunks available for summarisation."}
+
+    all_pages = sorted({c.get("page_number", 1) for c in chunks})
+    
+    # Collect sentences with page provenance
+    sentences_with_page = []
+    for c in chunks:
+        p_num = c.get("page_number", 1)
+        raw_sentences = re.split(r'(?<=[.!?])\s+', c.get("text", ""))
+        for s in raw_sentences:
+            cleaned_s = s.strip()
+            if len(cleaned_s) > 30:  # meaningful sentence
+                sentences_with_page.append((cleaned_s, p_num))
+
+    # 1. Executive Summary: First few substantial sentences from early pages
+    early_sentences = [s for s, p in sentences_with_page if p <= min(all_pages) + 2]
+    if early_sentences:
+        exec_summary = " ".join(early_sentences[:4])
+    else:
+        exec_summary = " ".join([s for s, _ in sentences_with_page[:3]])
+
+    # 2. Key Takeaways
+    key_takeaways = []
+    seen_takeaways = set()
+    for s, p in sentences_with_page:
+        lower = s.lower()
+        if any(marker in lower for marker in ["significant", "conclude", "result", "important", "major", "objective", "purpose", "shows that"]):
+            if s not in seen_takeaways and len(key_takeaways) < 8:
+                key_takeaways.append(f"{s} (Page {p})")
+                seen_takeaways.add(s)
+
+    if len(key_takeaways) < 3:
+        # Sample well-spaced sentences across the document
+        step = max(1, len(sentences_with_page) // 6)
+        for i in range(0, len(sentences_with_page), step):
+            s, p = sentences_with_page[i]
+            if s not in seen_takeaways and len(key_takeaways) < 6:
+                key_takeaways.append(f"{s} (Page {p})")
+                seen_takeaways.add(s)
+
+    # 3. Main Topics (from headers or frequent nouns)
+    topics = []
+    seen_topics = set()
+    for c in chunks:
+        lines = c.get("text", "").split("\n")
+        for line in lines:
+            line_s = line.strip()
+            # Likely header: short, capitalized, no period
+            if 4 < len(line_s) < 60 and not line_s.endswith(".") and not line_s.startswith("http"):
+                clean_top = re.sub(r'^[0-9.\-\s]+', '', line_s)
+                if clean_top and clean_top not in seen_topics and len(clean_top.split()) <= 6:
+                    topics.append(clean_top)
+                    seen_topics.add(clean_top)
+                    if len(topics) >= 6:
+                        break
+        if len(topics) >= 6:
+            break
+
+    if not topics:
+        topics = ["Document Content", "Core Principles", "Analysis & Findings"]
+
+    # 4. Important Definitions
+    definitions = []
+    def_patterns = [
+        r'([A-Z][a-zA-Z\s]{2,30})\s+(?:is defined as|refers to|means|is described as)\s+([^.]+)',
+        r'([A-Z][a-zA-Z\s]{2,30})\s*:\s*([A-Z][^.]+)',
+    ]
+    for s, p in sentences_with_page:
+        for pat in def_patterns:
+            m = re.search(pat, s)
+            if m:
+                term = m.group(1).strip()
+                defi = m.group(2).strip()
+                if len(term) < 40 and len(defi) > 15:
+                    definitions.append({"term": term, "definition": f"{defi}. (Page {p})"})
+                    if len(definitions) >= 5:
+                        break
+        if len(definitions) >= 5:
+            break
+
+    # 5. Dates & Figures
+    dates_and_figures = []
+    seen_df = set()
+    num_pattern = re.compile(r'\b(?:\d+(?:\.\d+)?%|\$\d+(?:,\d+)*(?:\.\d+)?|\b(?:19|20)\d{2}\b|\bQ[1-4]\b|\b\d+\s*(?:crore|lakh|million|billion|units|marks|hours)\b)', re.IGNORECASE)
+    for s, p in sentences_with_page:
+        matches = num_pattern.findall(s)
+        if matches:
+            for match in matches:
+                item_str = f"'{match}' — {truncate_text(s, 140)} (Page {p})"
+                if item_str not in seen_df:
+                    dates_and_figures.append(item_str)
+                    seen_df.add(item_str)
+                    if len(dates_and_figures) >= 6:
+                        break
+        if len(dates_and_figures) >= 6:
+            break
+
+    # 6. Action Items / Recommendations
+    action_items = []
+    for s, p in sentences_with_page:
+        lower = s.lower()
+        if any(w in lower for w in ["recommend", "should", "must", "action item", "ensure", "advised to"]):
+            action_items.append(f"{s} (Page {p})")
+            if len(action_items) >= 5:
+                break
+
+    # 7. Concise Summary
+    first_sentence = sentences_with_page[0][0] if sentences_with_page else "Document overview."
+    concise = f"{filename or 'This document'} covers {len(all_pages)} pages addressing {', '.join(topics[:3])}."
+
+    return {
+        "executive_summary":     exec_summary,
+        "concise_summary":       concise,
+        "key_takeaways":         key_takeaways,
+        "main_topics":           topics,
+        "important_definitions": definitions,
+        "dates_and_figures":     dates_and_figures,
+        "action_items":          action_items,
+        "source_pages":          all_pages,
+        "chunk_count_used":      len(chunks),
+        "total_chunks":          len(chunks),
+        "mode":                  "extractive",
+        "error":                 None,
+    }
 
 
 # ── Map step ───────────────────────────────────────────────────────────────────
@@ -186,7 +328,10 @@ def summarise_document(
             logger.warning("Map batch %d returned no result.", i // batch_size)
 
     if not partials:
-        return {"error": "Summarisation failed — Ollama returned no output. Is it running?"}
+        logger.info("Ollama returned no partials; falling back to extractive summary.")
+        fallback = generate_extractive_summary(chunks)
+        fallback["mode"] = "extractive_fallback"
+        return fallback
 
     # ── Reduce ─────────────────────────────────────────────────────────────────
     if len(partials) == 1:
