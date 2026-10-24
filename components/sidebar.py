@@ -35,15 +35,13 @@ def render_sidebar() -> None:
     with st.sidebar:
         # ── Logo ───────────────────────────────────────────────────────────────
         st.markdown(
-            """
-            <div class="sidebar-logo">
-                <span class="sidebar-logo-icon">🧠</span>
-                <div class="sidebar-logo-text">
-                    <span class="sidebar-logo-name">RAG Document Assistant</span>
-                    <span class="sidebar-logo-tagline">Your documents. One intelligent workspace.</span>
-                </div>
-            </div>
-            """,
+            '<div class="sidebar-logo">'
+            '<span class="sidebar-logo-icon">🧠</span>'
+            '<div class="sidebar-logo-text">'
+            '<span class="sidebar-logo-name">RAG Document Assistant</span>'
+            '<span class="sidebar-logo-tagline">Your documents. One intelligent workspace.</span>'
+            '</div>'
+            '</div>',
             unsafe_allow_html=True,
         )
 
@@ -85,13 +83,11 @@ def render_sidebar() -> None:
             badge_class, dot, label = "offline", "●", "Ollama · offline"
 
         st.markdown(
-            f"""
-            <div style="padding: 0 0.4rem 0.8rem;">
-                <span class="status-badge {badge_class}">
-                    <span class="status-dot"></span>{label}
-                </span>
-            </div>
-            """,
+            f'<div style="padding: 0 0.4rem 0.8rem;">'
+            f'<span class="status-badge {badge_class}">'
+            f'<span class="status-dot"></span>{label}'
+            f'</span>'
+            f'</div>',
             unsafe_allow_html=True,
         )
 
@@ -113,25 +109,11 @@ def render_sidebar() -> None:
             stats = {"doc_count": 0, "page_total": 0, "chunk_total": 0, "query_count": 0}
 
         st.markdown(
-            f"""
-            <div>
-                <div class="sidebar-stat">
-                    <span class="sidebar-stat-label">📄 Indexed docs</span>
-                    <span class="sidebar-stat-value">{stats['doc_count']}</span>
-                </div>
-                <div class="sidebar-stat">
-                    <span class="sidebar-stat-label">📃 Total pages</span>
-                    <span class="sidebar-stat-value">{stats['page_total']}</span>
-                </div>
-                <div class="sidebar-stat">
-                    <span class="sidebar-stat-label">🧩 Chunks</span>
-                    <span class="sidebar-stat-value">{stats['chunk_total']}</span>
-                </div>
-                <div class="sidebar-stat">
-                    <span class="sidebar-stat-label">❓ Queries</span>
-                    <span class="sidebar-stat-value">{stats['query_count']}</span>
-                </div>
-            </div>
-            """,
+            f'<div>'
+            f'<div class="sidebar-stat"><span class="sidebar-stat-label">📄 Indexed docs</span><span class="sidebar-stat-value">{stats["doc_count"]}</span></div>'
+            f'<div class="sidebar-stat"><span class="sidebar-stat-label">📃 Total pages</span><span class="sidebar-stat-value">{stats["page_total"]}</span></div>'
+            f'<div class="sidebar-stat"><span class="sidebar-stat-label">🧩 Chunks</span><span class="sidebar-stat-value">{stats["chunk_total"]}</span></div>'
+            f'<div class="sidebar-stat"><span class="sidebar-stat-label">❓ Queries</span><span class="sidebar-stat-value">{stats["query_count"]}</span></div>'
+            f'</div>',
             unsafe_allow_html=True,
         )

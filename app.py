@@ -219,19 +219,14 @@ with col_docs:
             size_str  = human_readable_size(doc.get("file_size", 0))
 
             st.markdown(
-                f"""
-                <div class="doc-row">
-                    <span class="doc-icon">📄</span>
-                    <div class="doc-info">
-                        <div class="doc-name" title="{doc['filename']}">{doc['filename']}</div>
-                        <div class="doc-meta">
-                            {doc.get('page_count', 0)} pages · {doc.get('chunk_count', 0)} chunks
-                            · {size_str} · {time_str}
-                        </div>
-                    </div>
-                    <span class="pill {pill_class}">{status}</span>
-                </div>
-                """,
+                f'<div class="doc-row">'
+                f'<span class="doc-icon">📄</span>'
+                f'<div class="doc-info">'
+                f'<div class="doc-name" title="{doc["filename"]}">{doc["filename"]}</div>'
+                f'<div class="doc-meta">{doc.get("page_count", 0)} pages · {doc.get("chunk_count", 0)} chunks · {size_str} · {time_str}</div>'
+                f'</div>'
+                f'<span class="pill {pill_class}">{status}</span>'
+                f'</div>',
                 unsafe_allow_html=True,
             )
 
@@ -300,15 +295,15 @@ else:
         ts    = datetime.fromtimestamp(event.get("timestamp", 0))
         ts_str = ts.strftime("%d %b, %H:%M")
         desc   = event.get("description", "")
-        items_html += f"""
-        <div class="activity-item">
-            <span class="activity-dot {color}"></span>
-            <div>
-                <div class="activity-text">{desc}</div>
-                <div class="activity-time">{ts_str}</div>
-            </div>
-        </div>
-        """
+        items_html += (
+            f'<div class="activity-item">'
+            f'<span class="activity-dot {color}"></span>'
+            f'<div>'
+            f'<div class="activity-text">{desc}</div>'
+            f'<div class="activity-time">{ts_str}</div>'
+            f'</div>'
+            f'</div>'
+        )
 
     st.markdown(
         f'<div class="glass-panel">{items_html}</div>',

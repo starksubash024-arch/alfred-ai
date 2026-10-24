@@ -19,12 +19,6 @@ def render_kpi_cards(stats: dict) -> None:
     for col, icon, value, label, delta in cards:
         with col:
             st.markdown(
-                f"""
-                <div class="kpi-card">
-                    <span class="kpi-icon">{icon}</span>
-                    <div class="kpi-value">{value:,}</div>
-                    <div class="kpi-label">{label}</div>
-                </div>
-                """,
+                f'<div class="kpi-card"><span class="kpi-icon">{icon}</span><div class="kpi-value">{value:,}</div><div class="kpi-label">{label}</div></div>',
                 unsafe_allow_html=True,
             )
