@@ -28,10 +28,17 @@ from components.assets_loader import get_asset_uri
 
 
 def _load_css() -> None:
-    """Inject the custom CSS."""
+    """Inject the custom CSS with background texture assets."""
     css_path = Path(__file__).parent.parent / "styles" / "custom.css"
     if css_path.exists():
-        st.markdown(f"<style>{css_path.read_text(encoding='utf-8')}</style>", unsafe_allow_html=True)
+        scales_uri = get_asset_uri("dragon_scales_bg.jpg")
+        css_text = css_path.read_text(encoding="utf-8")
+        extra_vars = f"""
+        :root {{
+            --bg-scales-uri: url('{scales_uri}');
+        }}
+        """ if scales_uri else ""
+        st.markdown(f"<style>{extra_vars}\n{css_text}</style>", unsafe_allow_html=True)
 
 
 def render_sidebar(active_page: str = "Dashboard") -> None:

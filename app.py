@@ -45,7 +45,14 @@ st.set_page_config(
 def load_css():
     css_path = Path(__file__).parent / "styles" / "custom.css"
     if css_path.exists():
-        st.markdown(f"<style>{css_path.read_text(encoding='utf-8')}</style>", unsafe_allow_html=True)
+        scales_uri = get_asset_uri("dragon_scales_bg.jpg")
+        css_text = css_path.read_text(encoding="utf-8")
+        extra_vars = f"""
+        :root {{
+            --bg-scales-uri: url('{scales_uri}');
+        }}
+        """ if scales_uri else ""
+        st.markdown(f"<style>{extra_vars}\n{css_text}</style>", unsafe_allow_html=True)
 
 load_css()
 
@@ -63,7 +70,7 @@ if "assistant_answer" not in st.session_state:
     st.session_state.assistant_answer = None
 
 # ── Top Header Navigation Bar ─────────────────────────────────────────────────
-hero_dragon_uri = get_asset_uri("hero_dragon.png")
+hero_dragon_uri = get_asset_uri("hero_dragon_head.webp") or get_asset_uri("hero_dragon_head.png") or get_asset_uri("hero_dragon.png")
 bottom_card_dragon_uri = get_asset_uri("bottom_dragon_card.png")
 upload_dragon_uri = get_asset_uri("upload_dragon.png")
 upload_pdf_uri = get_asset_uri("upload_pdf_icon.png")
@@ -72,7 +79,7 @@ now_str = datetime.now().strftime("%b %d, %Y  %H:%M")
 
 header_html = f"""<div class="nemesis-top-header">
 <div class="top-search-bar">
-<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7B849B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#AAB0BC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
 <circle cx="11" cy="11" r="8"></circle>
 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
 </svg>
@@ -102,12 +109,20 @@ else:
 col_main, col_rail = st.columns([2.4, 0.95], gap="large")
 
 with col_main:
-    # ── 1. Hero Greeting Banner with Dragon Artwork ───────────────────────────
-    hero_dragon_tag = f'<img src="{hero_dragon_uri}" class="hero-dragon-art" alt="NEMESIS Dragon" />' if hero_dragon_uri else ''
-    hero_html = f"""<div class="nemesis-hero">
-<div class="hero-text-content">
-<div class="hero-greeting">{greeting_prefix} <span class="hero-name">Stark</span></div>
+    # ── 1. Expansive Hero Greeting with Atmospheric Dragon Artwork ────────────
+    hero_dragon_tag = f'<img src="{hero_dragon_uri}" class="hero-dragon-backdrop" alt="NEMESIS Dragon" />' if hero_dragon_uri else ''
+    hero_html = f"""<div class="nemesis-hero-scene">
+<div class="hero-content-left">
+<div class="hero-hud-badge"><span class="hud-pulse-dot"></span><span>NEMESIS DOCUMENT COMMAND</span></div>
+<h1 class="hero-greeting">{greeting_prefix} <span class="hero-name">Stark</span></h1>
 <div class="hero-subtext">Upload your documents, ask questions, get summaries and gain insights — all from your local files.</div>
+<div class="hero-motto-strip">
+<span class="motto-item">ANALYZE</span>
+<span class="motto-divider">/</span>
+<span class="motto-item">UNDERSTAND</span>
+<span class="motto-divider">/</span>
+<span class="motto-item">ACHIEVE</span>
+</div>
 </div>
 {hero_dragon_tag}
 </div>"""
@@ -121,7 +136,7 @@ with col_main:
 
     render_kpi_cards(stats)
 
-    # ── 3. Central PDF Upload Area (Matching Reference Screenshot) ────────────
+    # ── 3. Central PDF Upload Drop Zone (Dragon Command Center) ────────────────
     pdf_decor_tag = f'<img src="{upload_pdf_uri}" class="upload-decor-pdf-img" alt="PDF" />' if upload_pdf_uri else ''
     dragon_decor_tag = f'<img src="{upload_dragon_uri}" class="upload-decor-dragon-img" alt="Dragon" />' if upload_dragon_uri else ''
 
@@ -129,7 +144,7 @@ with col_main:
 {pdf_decor_tag}
 <div class="upload-center-content">
 <div class="upload-cloud-icon">
-<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#159CFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FF174F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
 <path d="M12 12v9"/>
 <path d="m8 16 4-4 4 4"/>
@@ -307,7 +322,7 @@ with col_main:
     with col_hdr_left:
         st.markdown(
             """<div class="assistant-header-left">
-<div class="assistant-avatar-circle">🧠</div>
+<div class="assistant-avatar-circle">🐉</div>
 <div class="assistant-title-group">
 <span class="assistant-title">NEMESIS AI Assistant</span>
 <span class="assistant-sub">Ask anything about your documents — get accurate, source-backed answers.</span>
