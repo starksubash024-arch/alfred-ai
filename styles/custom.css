@@ -119,12 +119,32 @@ header[data-testid="stHeader"] {
     border-color: rgba(255, 255, 255, 0.08) !important;
 }
 [data-testid="stSidebar"] a[aria-current="page"],
+[data-testid="stSidebar"] a[aria-disabled="true"],
+[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"][aria-disabled="true"],
 [data-testid="stSidebar"] a.active {
-    background: linear-gradient(135deg, rgba(255, 23, 79, 0.25), rgba(217, 13, 67, 0.12)) !important;
+    background: linear-gradient(135deg, #FF174F 0%, #B70032 100%) !important;
     color: #FFFFFF !important;
     font-weight: 700 !important;
-    border: 1px solid var(--accent-crimson) !important;
-    box-shadow: 0 0 16px rgba(255, 23, 79, 0.28) !important;
+    border: 1px solid #FF3F77 !important;
+    box-shadow: 0 0 16px rgba(255, 23, 79, 0.42) !important;
+    opacity: 1 !important;
+}
+[data-testid="stSidebar"] a[aria-current="page"] span,
+[data-testid="stSidebar"] a[aria-disabled="true"] span {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
+
+/* Sidebar Smoke Artwork */
+.sidebar-smoke-container {
+    margin-top: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    opacity: 0.65;
+}
+.sidebar-smoke-img {
+    width: 100%;
+    display: block;
 }
 
 /* Sidebar Section Headers */
@@ -204,26 +224,26 @@ header[data-testid="stHeader"] {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.4rem 0 0.9rem 0;
-    margin-bottom: 0.5rem;
+    padding: 0.4rem 0 0.8rem 0;
+    margin-bottom: 0.6rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 .top-search-bar {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #0B0E18;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #080A14;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-pill);
-    padding: 0.45rem 1.1rem;
-    width: 380px;
-    color: var(--text-muted);
-    font-size: 0.82rem;
+    padding: 0.45rem 1.15rem;
+    width: 420px;
+    color: #7B849B;
+    font-size: 0.8rem;
     transition: all 0.2s ease;
 }
 .top-search-bar:focus-within {
     border-color: var(--accent-crimson);
-    box-shadow: 0 0 12px rgba(255, 23, 79, 0.2);
+    box-shadow: 0 0 12px rgba(255, 23, 79, 0.25);
     color: #FFFFFF;
 }
 .top-header-right {
@@ -233,42 +253,53 @@ header[data-testid="stHeader"] {
     font-size: 0.8rem;
     color: var(--text-muted);
 }
+.header-theme-icon {
+    font-size: 1.05rem;
+    color: #8E95A8;
+    cursor: pointer;
+}
+.header-datetime {
+    font-size: 0.78rem;
+    color: #8E95A8;
+    letter-spacing: 0.02em;
+}
 .header-badge {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: rgba(0, 216, 181, 0.12);
-    border: 1px solid rgba(0, 216, 181, 0.3);
-    color: #00D8B5;
-    padding: 3px 10px;
+    background: #0A0D18;
+    border: 1px solid rgba(0, 216, 181, 0.35);
+    color: #F4F5FA;
+    padding: 3px 12px;
     border-radius: var(--radius-pill);
     font-size: 0.72rem;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0.03em;
 }
 .user-avatar {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #FF174F, #D90D43);
+    background: #121524;
+    border: 1.5px solid var(--accent-crimson);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 800;
     font-size: 0.75rem;
     color: #FFFFFF;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(255, 23, 79, 0.35);
 }
 
 /* ── Hero Greeting Banner (With Dragon Background) ────────────────────────── */
 .nemesis-hero {
     position: relative;
     border-radius: var(--radius-lg);
-    background: radial-gradient(circle at 85% 30%, rgba(255, 23, 79, 0.08), transparent 50%),
-                linear-gradient(180deg, #090B14 0%, #06070D 100%);
+    background: radial-gradient(circle at 75% 35%, rgba(255, 23, 79, 0.09), transparent 60%),
+                #06070E;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 1.6rem 2rem;
-    margin-bottom: 1.4rem;
+    padding: 1.6rem 2.2rem;
+    margin-bottom: 1.2rem;
     overflow: hidden;
     min-height: 140px;
     display: flex;
@@ -277,15 +308,15 @@ header[data-testid="stHeader"] {
 }
 .hero-dragon-art {
     position: absolute;
-    right: 120px;
-    top: -20px;
-    height: 180px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
     width: auto;
-    opacity: 0.85;
+    object-fit: cover;
     pointer-events: none;
-    filter: drop-shadow(0 0 25px rgba(255, 23, 79, 0.35));
-    mask-image: linear-gradient(to left, black 60%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to left, black 60%, transparent 100%);
+    z-index: 1;
+    filter: drop-shadow(0 0 20px rgba(255, 23, 79, 0.25));
 }
 .hero-text-content {
     position: relative;
@@ -293,21 +324,22 @@ header[data-testid="stHeader"] {
     max-width: 580px;
 }
 .hero-greeting {
-    font-size: 1.95rem;
+    font-size: 2.15rem;
     font-weight: 800;
     color: #FFFFFF;
     line-height: 1.15;
     letter-spacing: -0.02em;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.35rem;
 }
 .hero-greeting .hero-name {
     color: var(--accent-crimson);
-    text-shadow: 0 0 16px rgba(255, 23, 79, 0.4);
+    text-shadow: 0 0 18px rgba(255, 23, 79, 0.45);
 }
 .hero-subtext {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     color: var(--text-muted);
     line-height: 1.5;
+}
 }
 .hero-right-motto {
     position: relative;
@@ -440,58 +472,67 @@ header[data-testid="stHeader"] {
 
 /* ── Central PDF Upload Area (Reference Screenshot) ────────────────────────── */
 .nemesis-upload-container {
-    background: linear-gradient(135deg, rgba(255, 23, 79, 0.03) 0%, rgba(21, 156, 255, 0.02) 100%),
-                #0A0C16;
-    border: 1px dashed rgba(255, 23, 79, 0.4);
+    background: #070913;
+    border: 1px dashed rgba(21, 156, 255, 0.35);
     border-radius: var(--radius-lg);
-    padding: 2.2rem 2rem;
-    text-align: center;
+    padding: 1.8rem 2rem;
     position: relative;
     overflow: hidden;
-    margin-bottom: 1.4rem;
+    margin-bottom: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     transition: all 0.25s ease;
 }
 .nemesis-upload-container:hover {
-    border-color: var(--accent-crimson);
-    box-shadow: 0 0 25px rgba(255, 23, 79, 0.15);
+    border-color: #159CFF;
+    box-shadow: 0 0 22px rgba(21, 156, 255, 0.18);
 }
-.upload-decor-pdf {
+.upload-decor-pdf-img {
     position: absolute;
     left: 45px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 3.2rem;
-    color: rgba(255, 23, 79, 0.35);
-    border: 2px solid rgba(255, 23, 79, 0.3);
-    border-radius: 12px;
-    padding: 10px 14px;
-    background: rgba(255, 23, 79, 0.05);
+    height: 75px;
+    width: auto;
+    pointer-events: none;
+    filter: drop-shadow(0 0 12px rgba(255, 23, 79, 0.35));
+}
+.upload-decor-dragon-img {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 90px;
+    width: auto;
+    pointer-events: none;
+    opacity: 0.85;
 }
 .upload-center-content {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
+    z-index: 2;
 }
 .upload-cloud-icon {
-    font-size: 2.3rem;
-    color: var(--accent-blue);
-    margin-bottom: 0.5rem;
-    filter: drop-shadow(0 0 10px rgba(21, 156, 255, 0.4));
+    margin-bottom: 0.4rem;
+    filter: drop-shadow(0 0 10px rgba(21, 156, 255, 0.45));
 }
 .upload-main-title {
     font-size: 1.05rem;
     font-weight: 700;
     color: #FFFFFF;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.25rem;
 }
 .upload-helper-text {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-bottom: 0.4rem;
+    font-size: 0.78rem;
+    color: #8E95A8;
+    margin-bottom: 0.35rem;
 }
 .upload-footer-text {
-    font-size: 0.7rem;
-    color: var(--text-dim);
+    font-size: 0.68rem;
+    color: #555D71;
 }
 
 /* ── Middle Row Panels (Recent Docs & Recent Activity) ─────────────────────── */
@@ -577,21 +618,21 @@ header[data-testid="stHeader"] {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 2.2rem 1rem;
+    padding: 1.8rem 1rem;
     flex: 1;
 }
 .panel-empty-icon-circle {
     width: 52px;
     height: 52px;
     border-radius: 50%;
-    border: 1px solid var(--border-card);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(255, 255, 255, 0.02);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
     color: var(--text-dim);
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.7rem;
 }
 .panel-empty-title {
     font-size: 0.9rem;
@@ -602,7 +643,26 @@ header[data-testid="stHeader"] {
 .panel-empty-sub {
     font-size: 0.74rem;
     color: var(--text-dim);
-    margin-bottom: 1rem;
+    margin-bottom: 0.9rem;
+}
+.empty-upload-btn {
+    background: linear-gradient(135deg, #FF174F 0%, #B70032 100%) !important;
+    border: 1px solid #FF3F77 !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    font-size: 0.78rem !important;
+    border-radius: 8px !important;
+    padding: 7px 18px !important;
+    box-shadow: 0 0 14px rgba(255, 23, 79, 0.38) !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    transition: all 0.2s ease !important;
+}
+.empty-upload-btn:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 0 20px rgba(255, 23, 79, 0.55) !important;
 }
 
 /* ── Right Rail Panels (Quick Actions, Recent Queries, Brand Card) ─────────── */
@@ -611,7 +671,7 @@ header[data-testid="stHeader"] {
     border: 1px solid var(--border-card);
     border-radius: var(--radius-md);
     padding: 1.1rem 1.25rem;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.1rem;
 }
 
 /* Quick Action Item */
@@ -619,9 +679,9 @@ header[data-testid="stHeader"] {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #0E111E;
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-sm);
+    background: #0B0E1A;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
     padding: 0.65rem 0.85rem;
     margin-bottom: 0.55rem;
     cursor: pointer;
@@ -629,8 +689,8 @@ header[data-testid="stHeader"] {
     text-decoration: none !important;
 }
 .quick-action-card:hover {
-    background: #141829;
-    border-color: rgba(255, 255, 255, 0.18);
+    background: #111526;
+    border-color: rgba(255, 255, 255, 0.16);
     transform: translateX(2px);
 }
 .quick-action-left {
@@ -645,13 +705,12 @@ header[data-testid="stHeader"] {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.95rem;
     flex-shrink: 0;
 }
-.qa-icon-box.crimson { background: rgba(255, 23, 79, 0.15); color: var(--accent-crimson); }
-.qa-icon-box.violet  { background: rgba(150, 61, 255, 0.15); color: var(--accent-violet); }
-.qa-icon-box.blue    { background: rgba(21, 156, 255, 0.15); color: var(--accent-blue); }
-.qa-icon-box.teal    { background: rgba(0, 216, 181, 0.15); color: var(--accent-teal); }
+.qa-icon-box.crimson { background: rgba(255, 23, 79, 0.12); border: 1px solid rgba(255, 23, 79, 0.25); }
+.qa-icon-box.violet  { background: rgba(150, 61, 255, 0.12); border: 1px solid rgba(150, 61, 255, 0.25); }
+.qa-icon-box.blue    { background: rgba(21, 156, 255, 0.12); border: 1px solid rgba(21, 156, 255, 0.25); }
+.qa-icon-box.teal    { background: rgba(0, 216, 181, 0.12); border: 1px solid rgba(0, 216, 181, 0.25); }
 
 .qa-text-col {
     display: flex;
@@ -664,11 +723,12 @@ header[data-testid="stHeader"] {
 }
 .qa-desc {
     font-size: 0.66rem;
-    color: var(--text-dim);
+    color: #6C748A;
 }
 .qa-chevron {
-    color: var(--text-dim);
-    font-size: 0.85rem;
+    color: #555D71;
+    font-size: 1.1rem;
+    font-weight: 300;
 }
 
 /* Recent Query Row Item */
@@ -676,9 +736,9 @@ header[data-testid="stHeader"] {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #0E111E;
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-sm);
+    background: #0B0E1A;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
     padding: 0.55rem 0.8rem;
     margin-bottom: 0.45rem;
     font-size: 0.74rem;
@@ -688,8 +748,8 @@ header[data-testid="stHeader"] {
 }
 .query-card-item:hover {
     color: #FFFFFF;
-    background: #141829;
-    border-color: var(--border-crimson);
+    background: #111526;
+    border-color: rgba(255, 23, 79, 0.4);
 }
 .query-card-left {
     display: flex;
@@ -701,55 +761,18 @@ header[data-testid="stHeader"] {
 }
 
 /* Lower Right Dragon Brand Promo Card */
-.nemesis-brand-card {
-    background: radial-gradient(circle at 90% 50%, rgba(255, 23, 79, 0.15), transparent 70%),
-                #090C16;
-    border: 1px solid rgba(255, 23, 79, 0.25);
-    border-radius: var(--radius-md);
-    padding: 1.1rem 1.2rem;
-    position: relative;
+.nemesis-brand-card-wrapper {
+    border-radius: 16px;
+    border: 1px solid rgba(255, 23, 79, 0.3);
+    box-shadow: 0 0 18px rgba(255, 23, 79, 0.16);
     overflow: hidden;
-    min-height: 95px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    background: #090C16;
+    margin-top: 0.8rem;
 }
-.brand-card-text {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #FFFFFF;
-    line-height: 1.35;
-    max-width: 65%;
-    z-index: 2;
-    margin-bottom: 0.6rem;
-}
-.brand-card-bottom {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    z-index: 2;
-}
-.brand-card-nemesis {
-    font-size: 0.65rem;
-    font-weight: 800;
-    letter-spacing: 0.16em;
-    color: var(--accent-crimson);
-}
-.brand-card-line {
-    flex: 1;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent-crimson), transparent);
-}
-.brand-card-dragon-img {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    height: 100%;
-    width: auto;
-    object-fit: cover;
-    opacity: 0.7;
-    filter: drop-shadow(0 0 10px rgba(255, 23, 79, 0.3));
+.nemesis-brand-card-img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 /* ── Bottom NEMESIS AI Assistant Panel ─────────────────────────────────────── */

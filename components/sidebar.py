@@ -55,15 +55,15 @@ def render_sidebar(active_page: str = "Dashboard") -> None:
         )
 
         # ── Navigation Items ─────────────────────────────────────────────────
-        st.page_link("app.py",               label="🏠   Dashboard",          disabled=(active_page == "Dashboard"))
-        st.page_link("pages/1_Chat.py",      label="💬   Chat with Documents", disabled=(active_page == "Chat"))
-        st.page_link("pages/2_Documents.py", label="📁   Document Library",    disabled=(active_page == "Documents"))
-        st.page_link("pages/3_Summaries.py", label="📝   Summaries",           disabled=(active_page == "Summaries"))
-        st.page_link("pages/4_Analytics.py", label="📊   Analytics",           disabled=(active_page == "Analytics"))
-        st.page_link("pages/5_Evaluation.py",label="🛡️   Evaluation",          disabled=(active_page == "Evaluation"))
-        st.page_link("pages/6_Settings.py",  label="⚙️   Settings",            disabled=(active_page == "Settings"))
+        st.page_link("app.py",               label="Dashboard",            icon=":material/home:",          disabled=(active_page == "Dashboard"))
+        st.page_link("pages/1_Chat.py",      label="Chat with Documents",   icon=":material/chat:",          disabled=(active_page == "Chat"))
+        st.page_link("pages/2_Documents.py", label="Document Library",      icon=":material/folder:",        disabled=(active_page == "Documents"))
+        st.page_link("pages/3_Summaries.py", label="Summaries",             icon=":material/article:",       disabled=(active_page == "Summaries"))
+        st.page_link("pages/4_Analytics.py", label="Analytics",             icon=":material/bar_chart:",     disabled=(active_page == "Analytics"))
+        st.page_link("pages/5_Evaluation.py",label="Evaluation",            icon=":material/shield:",        disabled=(active_page == "Evaluation"))
+        st.page_link("pages/6_Settings.py",  label="Settings",              icon=":material/settings:",      disabled=(active_page == "Settings"))
 
-        st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
 
         # ── Ollama Connection Card ───────────────────────────────────────────
         @st.cache_data(ttl=30, show_spinner=False)
@@ -104,24 +104,32 @@ def render_sidebar(active_page: str = "Dashboard") -> None:
             f'<span>System Status</span>'
             f'</div>'
             f'<div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; margin-bottom:4px;">'
-            f'<span style="color:var(--text-muted);">📄 Documents</span>'
+            f'<span style="color:var(--text-muted); display:flex; align-items:center; gap:6px;">📄 Documents</span>'
             f'<span style="font-weight:700; color:#FFFFFF;">{stats["doc_count"]}</span>'
             f'</div>'
-            f'<div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem;">'
-            f'<span style="color:var(--text-muted);">⏱️ Indexing</span>'
+            f'<div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; margin-bottom:8px;">'
+            f'<span style="color:var(--text-muted); display:flex; align-items:center; gap:6px;">⏱️ Indexing</span>'
             f'<span style="font-weight:700; color:#159CFF;">Idle</span>'
+            f'</div>'
+            f'<div style="height:3px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">'
+            f'<div style="width:70%; height:100%; background:#159CFF; box-shadow:0 0 6px rgba(21,156,255,0.6);"></div>'
             f'</div>'
             f'</div>',
             unsafe_allow_html=True,
         )
 
         # ── Bottom Quotation & Smoke Watermark ───────────────────────────────
-        smoke_img_tag = f'<img src="{smoke_uri}" style="width:100%; opacity:0.3; margin-top:10px; border-radius:8px;" />' if smoke_uri else ''
         st.markdown(
             f'<div class="sidebar-quote">'
             f'“Knowledge is not just power, it is freedom.”'
             f'<div class="sidebar-quote-author">— NEMESIS</div>'
-            f'{smoke_img_tag}'
             f'</div>',
             unsafe_allow_html=True,
         )
+        if smoke_uri:
+            st.markdown(
+                f'<div class="sidebar-smoke-container">'
+                f'<img src="{smoke_uri}" class="sidebar-smoke-img" alt="Dragon Scales" />'
+                f'</div>',
+                unsafe_allow_html=True,
+            )

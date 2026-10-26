@@ -65,20 +65,25 @@ if "assistant_answer" not in st.session_state:
 # ── Top Header Navigation Bar ─────────────────────────────────────────────────
 hero_dragon_uri = get_asset_uri("hero_dragon.png")
 bottom_card_dragon_uri = get_asset_uri("bottom_dragon_card.png")
+upload_dragon_uri = get_asset_uri("upload_dragon.png")
+upload_pdf_uri = get_asset_uri("upload_pdf_icon.png")
 
 now_str = datetime.now().strftime("%b %d, %Y  %H:%M")
 
 header_html = f"""<div class="nemesis-top-header">
 <div class="top-search-bar">
-<span>🔍</span>
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7B849B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+</svg>
 <span>Search documents, ask questions...</span>
 </div>
 <div class="top-header-right">
-<span>☀️</span>
-<span>{now_str}</span>
+<span class="header-theme-icon" title="Toggle theme">☼</span>
+<span class="header-datetime">{now_str}</span>
 <div class="user-avatar" title="Stark">S</div>
 <div class="header-badge">
-<span style="font-size:7px;">●</span> Local Mode
+<span style="font-size:7px; color:#00D8B5;">●</span> Local Mode <span style="font-size:9px; opacity:0.7;">▾</span>
 </div>
 </div>
 </div>"""
@@ -100,15 +105,11 @@ with col_main:
     # ── 1. Hero Greeting Banner with Dragon Artwork ───────────────────────────
     hero_dragon_tag = f'<img src="{hero_dragon_uri}" class="hero-dragon-art" alt="NEMESIS Dragon" />' if hero_dragon_uri else ''
     hero_html = f"""<div class="nemesis-hero">
-{hero_dragon_tag}
 <div class="hero-text-content">
 <div class="hero-greeting">{greeting_prefix} <span class="hero-name">Stark</span></div>
 <div class="hero-subtext">Upload your documents, ask questions, get summaries and gain insights — all from your local files.</div>
 </div>
-<div class="hero-right-motto">
-<div class="motto-line"></div>
-<div>ANALYZE<br>UNDERSTAND<br>ACHIEVE</div>
-</div>
+{hero_dragon_tag}
 </div>"""
     st.markdown(hero_html, unsafe_allow_html=True)
 
@@ -120,19 +121,27 @@ with col_main:
 
     render_kpi_cards(stats)
 
-    # ── 3. Central PDF Upload Area ────────────────────────────────────────────
-    st.markdown(
-        """<div class="nemesis-upload-container">
-<div class="upload-decor-pdf">📄<div style="font-size:0.65rem; font-weight:800; letter-spacing:0.05em; color:#FF174F;">PDF</div></div>
+    # ── 3. Central PDF Upload Area (Matching Reference Screenshot) ────────────
+    pdf_decor_tag = f'<img src="{upload_pdf_uri}" class="upload-decor-pdf-img" alt="PDF" />' if upload_pdf_uri else ''
+    dragon_decor_tag = f'<img src="{upload_dragon_uri}" class="upload-decor-dragon-img" alt="Dragon" />' if upload_dragon_uri else ''
+
+    upload_html = f"""<div class="nemesis-upload-container">
+{pdf_decor_tag}
 <div class="upload-center-content">
-<div class="upload-cloud-icon">☁️</div>
+<div class="upload-cloud-icon">
+<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#159CFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
+<path d="M12 12v9"/>
+<path d="m8 16 4-4 4 4"/>
+</svg>
+</div>
 <div class="upload-main-title">Upload PDF Documents</div>
 <div class="upload-helper-text">Drag and drop your PDF files here, or click to browse</div>
 <div class="upload-footer-text">Supports multiple files • PDF only • Max 50MB each</div>
 </div>
-</div>""",
-        unsafe_allow_html=True,
-    )
+{dragon_decor_tag}
+</div>"""
+    st.markdown(upload_html, unsafe_allow_html=True)
 
     uploaded_files = st.file_uploader(
         "Upload PDF files",
@@ -205,7 +214,7 @@ with col_main:
 <span class="panel-header-icon">📄</span>
 <span>Recent Documents</span>
 </div>
-<a href="/Documents" target="_self" class="panel-header-link">View all →</a>
+<a href="./Documents" target="_self" class="panel-header-link">View all →</a>
 </div>""",
             unsafe_allow_html=True,
         )
@@ -213,9 +222,15 @@ with col_main:
         if not all_docs:
             st.markdown(
                 """<div class="panel-empty-state">
-<div class="panel-empty-icon-circle">📄</div>
+<div class="panel-empty-icon-circle">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#555D71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<polyline points="14 2 14 8 20 8"></polyline>
+</svg>
+</div>
 <div class="panel-empty-title">No documents yet</div>
 <div class="panel-empty-sub">Upload your first PDF to get started</div>
+<button class="empty-upload-btn">📄  Upload Document</button>
 </div>
 </div>""",
                 unsafe_allow_html=True,
@@ -259,7 +274,11 @@ with col_main:
         if not activity:
             st.markdown(
                 """<div class="panel-empty-state">
-<div class="panel-empty-icon-circle">💬</div>
+<div class="panel-empty-icon-circle">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#159CFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+</div>
 <div class="panel-empty-title">No recent activity</div>
 <div class="panel-empty-sub">Your recent actions will appear here</div>
 </div>
@@ -282,36 +301,37 @@ with col_main:
             st.markdown(act_items_html, unsafe_allow_html=True)
 
     # ── 5. Bottom: NEMESIS AI Assistant ───────────────────────────────────────
-    st.markdown(
-        """<div class="nemesis-assistant-panel">
-<div class="assistant-header-row">
-<div class="assistant-header-left">
+    st.markdown("""<div class="nemesis-assistant-panel">""", unsafe_allow_html=True)
+    
+    col_hdr_left, col_hdr_right = st.columns([3.0, 2.4])
+    with col_hdr_left:
+        st.markdown(
+            """<div class="assistant-header-left">
 <div class="assistant-avatar-circle">🧠</div>
 <div class="assistant-title-group">
 <span class="assistant-title">NEMESIS AI Assistant</span>
 <span class="assistant-sub">Ask anything about your documents — get accurate, source-backed answers.</span>
 </div>
-</div>
 </div>""",
-        unsafe_allow_html=True,
-    )
-
-    # Controls row (Document scope & Top-K)
-    c_scope, c_k, c_space = st.columns([1.5, 1, 2.5])
-    with c_scope:
-        doc_opts = {"All Documents": None}
-        for d in all_docs:
-            if d.get("status") == "indexed":
-                doc_opts[d["filename"]] = d["id"]
-        chosen_scope_label = st.selectbox("Document Scope", list(doc_opts.keys()), label_visibility="collapsed")
-        chosen_doc_id = doc_opts.get(chosen_scope_label)
-
-    with c_k:
-        chosen_k = st.selectbox("Top K Results", [3, 5, 8, 10], index=1, format_func=lambda x: f"Top K: {x}", label_visibility="collapsed")
+            unsafe_allow_html=True,
+        )
+    with col_hdr_right:
+        c_scope, c_k, c_mic = st.columns([1.6, 1.2, 0.6])
+        with c_scope:
+            doc_opts = {"All Documents": None}
+            for d in all_docs:
+                if d.get("status") == "indexed":
+                    doc_opts[d["filename"]] = d["id"]
+            chosen_scope_label = st.selectbox("Scope", list(doc_opts.keys()), label_visibility="collapsed")
+            chosen_doc_id = doc_opts.get(chosen_scope_label)
+        with c_k:
+            chosen_k = st.selectbox("Top K", [3, 5, 8, 10], index=1, format_func=lambda x: f"Top K: {x}", label_visibility="collapsed")
+        with c_mic:
+            st.button("🎙️", key="btn_mic", help="Voice Input (Local mode)")
 
     # Question Input
     default_q = st.session_state.assistant_question or ""
-    q_input_col, q_btn_col = st.columns([5.5, 0.8], gap="small")
+    q_input_col, q_btn_col = st.columns([5.5, 0.7], gap="small")
     with q_input_col:
         user_q = st.text_input(
             "Ask anything about your documents...",
@@ -359,35 +379,85 @@ with col_main:
 
 with col_rail:
     # ── Right Rail 1: Quick Actions Panel ─────────────────────────────────────
-    st.markdown(
-        """<div class="right-rail-box">
-<div class="panel-header" style="margin-bottom:0.7rem;">
+    quick_actions_html = """<div class="right-rail-box">
+<div class="panel-header" style="margin-bottom:0.75rem;">
 <div class="panel-header-left">
 <span style="color:#FF174F; font-size:1rem;">⚡</span>
 <span>Quick Actions</span>
 </div>
-</div>""",
-        unsafe_allow_html=True,
-    )
+</div>
 
-    if st.button("📄  Summarize Documents\nGet key insights and highlights", use_container_width=True):
-        st.switch_page("pages/3_Summaries.py")
+<a href="./Summaries" target="_self" class="quick-action-card">
+<div class="quick-action-left">
+<div class="qa-icon-box crimson">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FF174F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<polyline points="14 2 14 8 20 8"></polyline>
+<line x1="16" y1="13" x2="8" y2="13"></line>
+<line x1="16" y1="17" x2="8" y2="17"></line>
+</svg>
+</div>
+<div class="qa-text-col">
+<span class="qa-title">Summarize Documents</span>
+<span class="qa-desc">Get key insights and highlights</span>
+</div>
+</div>
+<span class="qa-chevron">›</span>
+</a>
 
-    if st.button("💬  Start Chat\nAsk questions about your documents", use_container_width=True):
-        st.switch_page("pages/1_Chat.py")
+<a href="./Chat" target="_self" class="quick-action-card">
+<div class="quick-action-left">
+<div class="qa-icon-box violet">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#963DFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+</div>
+<div class="qa-text-col">
+<span class="qa-title">Start Chat</span>
+<span class="qa-desc">Ask questions about your documents</span>
+</div>
+</div>
+<span class="qa-chevron">›</span>
+</a>
 
-    if st.button("📁  View Library\nManage your uploaded documents", use_container_width=True):
-        st.switch_page("pages/2_Documents.py")
+<a href="./Documents" target="_self" class="quick-action-card">
+<div class="quick-action-left">
+<div class="qa-icon-box blue">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#159CFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg>
+</div>
+<div class="qa-text-col">
+<span class="qa-title">View Library</span>
+<span class="qa-desc">Manage your uploaded documents</span>
+</div>
+</div>
+<span class="qa-chevron">›</span>
+</a>
 
-    if st.button("📊  View Analytics\nSee detailed charts and insights", use_container_width=True):
-        st.switch_page("pages/4_Analytics.py")
-
-    st.markdown("</div>", unsafe_allow_html=True)
+<a href="./Analytics" target="_self" class="quick-action-card">
+<div class="quick-action-left">
+<div class="qa-icon-box teal">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#00D8B5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<line x1="18" y1="20" x2="18" y2="10"></line>
+<line x1="12" y1="20" x2="12" y2="4"></line>
+<line x1="6" y1="20" x2="6" y2="14"></line>
+</svg>
+</div>
+<div class="qa-text-col">
+<span class="qa-title">View Analytics</span>
+<span class="qa-desc">See detailed charts and insights</span>
+</div>
+</div>
+<span class="qa-chevron">›</span>
+</a>
+</div>"""
+    st.markdown(quick_actions_html, unsafe_allow_html=True)
 
     # ── Right Rail 2: Recent Queries Panel ────────────────────────────────────
     st.markdown(
         """<div class="right-rail-box">
-<div class="panel-header" style="margin-bottom:0.7rem;">
+<div class="panel-header" style="margin-bottom:0.75rem;">
 <div class="panel-header-left">
 <span style="color:#FF174F; font-size:1rem;">💬</span>
 <span>Recent Queries</span>
@@ -397,28 +467,25 @@ with col_rail:
     )
 
     queries_list = [
-        "Summarize this document",
-        "What are the key findings?",
-        "Find specific information in this document",
-        "Show me the sources for this answer.",
-        "What are the main topics?",
+        ("📌", "Summarize this document"),
+        ("🎯", "What are the key findings?"),
+        ("🔍", "Find specific information in this document"),
+        ("📎", "Show me the sources for this answer."),
+        ("📄", "What are the main topics?"),
     ]
 
-    for q_item in queries_list:
-        if st.button(f"🔍 {q_item}", key=f"rq_{q_item}", use_container_width=True):
+    for icon, q_item in queries_list:
+        if st.button(f"{icon}  {q_item}  ›", key=f"rq_{q_item}", use_container_width=True):
             st.session_state.assistant_question = q_item
             st.rerun()
 
     st.markdown("</div>", unsafe_allow_html=True)
 
     # ── Right Rail 3: NEMESIS Brand Promotional Card ──────────────────────────
-    bottom_dragon_tag = f'<img src="{bottom_card_dragon_uri}" class="brand-card-dragon-img" alt="Dragon" />' if bottom_card_dragon_uri else ''
-    brand_card_html = f"""<div class="nemesis-brand-card">
-{bottom_dragon_tag}
-<div class="brand-card-text">Your documents.<br>One intelligent workspace.</div>
-<div class="brand-card-bottom">
-<span class="brand-card-nemesis">NEMESIS</span>
-<div class="brand-card-line"></div>
-</div>
-</div>"""
-    st.markdown(brand_card_html, unsafe_allow_html=True)
+    if bottom_card_dragon_uri:
+        st.markdown(
+            f"""<div class="nemesis-brand-card-wrapper">
+<img src="{bottom_card_dragon_uri}" class="nemesis-brand-card-img" alt="NEMESIS - Your documents. One intelligent workspace." />
+</div>""",
+            unsafe_allow_html=True,
+        )
