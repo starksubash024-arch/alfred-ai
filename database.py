@@ -108,12 +108,19 @@ def init_db() -> None:
 # ── Document CRUD ──────────────────────────────────────────────────────────────
 
 def insert_document(doc: dict) -> None:
-    """Insert a new document record."""
+    """Insert a new document record or update existing on conflict."""
     sql = """
     INSERT INTO documents
         (id, filename, file_hash, file_size, page_count, status, upload_time)
     VALUES
         (:id, :filename, :file_hash, :file_size, :page_count, :status, :upload_time)
+    ON CONFLICT(file_hash) DO UPDATE SET
+        filename    = excluded.filename,
+        file_size   = excluded.file_size,
+        page_count  = excluded.page_count,
+        status      = excluded.status,
+        upload_time = excluded.upload_time,
+        error_msg   = NULL
     """
     with get_conn() as conn:
         conn.execute(sql, doc)

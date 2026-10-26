@@ -158,16 +158,24 @@ with col_main:
                         bar.progress(min(pct, 1.0), text=msg)
                     return cb
 
-                with st.spinner(f"Indexing {ufile.name}…"):
-                    result = rag_engine.ingest_pdf(
-                        file_bytes=file_bytes,
-                        filename=ufile.name,
-                        progress_callback=make_cb(progress_bar),
-                    )
-
-                progress_bar.empty()
-                st.session_state.processed_upload_ids.add(get_file_key(ufile))
-                st.session_state.upload_results.append((ufile.name, result))
+                try:
+                    with st.spinner(f"Indexing {ufile.name}…"):
+                        result = rag_engine.ingest_pdf(
+                            file_bytes=file_bytes,
+                            filename=ufile.name,
+                            progress_callback=make_cb(progress_bar),
+                        )
+                except Exception as exc:
+                    result = {
+                        "success": False,
+                        "error": str(exc),
+                        "duplicate": False,
+                        "doc_id": None,
+                    }
+                finally:
+                    progress_bar.empty()
+                    st.session_state.processed_upload_ids.add(get_file_key(ufile))
+                    st.session_state.upload_results.append((ufile.name, result))
 
             st.rerun()
 

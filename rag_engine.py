@@ -76,18 +76,27 @@ def ingest_pdf(
     doc_id    = make_doc_id(file_hash)
 
     existing = db.get_document_by_hash(file_hash)
-    if existing and existing["status"] == "indexed":
-        return {
-            "success":    True,
-            "duplicate":  True,
-            "doc_id":     existing["id"],
-            "filename":   existing["filename"],
-            "page_count": existing["page_count"],
-            "chunk_count": existing["chunk_count"],
-            "warnings":   [],
-            "error":      None,
-            "processing_ms": 0,
-        }
+    if existing:
+        if existing.get("status") == "indexed":
+            return {
+                "success":    True,
+                "duplicate":  True,
+                "doc_id":     existing["id"],
+                "filename":   existing["filename"],
+                "page_count": existing["page_count"],
+                "chunk_count": existing["chunk_count"],
+                "warnings":   [],
+                "error":      None,
+                "processing_ms": 0,
+            }
+        else:
+            # Previous indexing attempt was interrupted or ended in error/indexing state.
+            # Clean up the partial document and its chunks before re-indexing.
+            logger.info("Cleaning up incomplete document %s (status=%s) before re-indexing", filename, existing.get("status"))
+            try:
+                delete_document(existing["id"])
+            except Exception as exc:
+                logger.warning("Could not cleanly delete partial document %s: %s", existing["id"], exc)
 
     # ── 3. Insert placeholder document record ──────────────────────────────────
     safe_name = filename
