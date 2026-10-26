@@ -10,23 +10,26 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 
-# Shared colour palette that matches the dark CSS theme
-BLUE  = "#00D4FF"
-CYAN  = "#00FFD4"
-GREEN = "#10B981"
-ORANGE= "#F59E0B"
-RED   = "#EF4444"
-BG    = "#0F1629"
-CARD  = "#141d35"
-TEXT  = "#E8EAF0"
-MUTED = "#8892A4"
+# NEMESIS colour palette that matches the dark crimson HUD theme
+CRIMSON = "#FF174F"
+RUBY    = "#D90D43"
+BLUE    = "#159CFF"
+VIOLET  = "#963DFF"
+TEAL    = "#00D8B5"
+GREEN   = "#00D8B5"
+ORANGE  = "#F59E0B"
+RED     = "#FF174F"
+BG      = "#0B0D17"
+CARD    = "#10121E"
+TEXT    = "#F4F5FA"
+MUTED   = "#A2A9BD"
 
 PLOTLY_THEME = dict(
     paper_bgcolor=BG,
     plot_bgcolor=CARD,
     font=dict(color=TEXT, family="Inter, sans-serif", size=12),
     margin=dict(l=40, r=20, t=40, b=40),
-    colorway=[BLUE, CYAN, GREEN, ORANGE, RED],
+    colorway=[CRIMSON, BLUE, VIOLET, TEAL, RUBY],
 )
 
 
@@ -45,7 +48,7 @@ def pages_per_doc_chart(doc_stats: list[dict]) -> Optional[go.Figure]:
         orientation="h",
         marker=dict(
             color=df["page_count"],
-            colorscale=[[0, BLUE], [1, CYAN]],
+            colorscale=[[0, BLUE], [1, CRIMSON]],
             showscale=False,
         ),
         hovertemplate="<b>%{y}</b><br>Pages: %{x}<extra></extra>",
@@ -72,7 +75,7 @@ def chunks_per_doc_chart(doc_stats: list[dict]) -> Optional[go.Figure]:
         x=df["chunk_count"],
         y=df["filename"],
         orientation="h",
-        marker=dict(color=CYAN),
+        marker=dict(color=VIOLET),
         hovertemplate="<b>%{y}</b><br>Chunks: %{x}<extra></extra>",
     ))
     fig.update_layout(
@@ -150,7 +153,7 @@ def score_histogram(scores: list[float]) -> Optional[go.Figure]:
     fig = go.Figure(go.Histogram(
         x=scores,
         nbinsx=20,
-        marker=dict(color=CYAN, opacity=0.8, line=dict(color=BG, width=1)),
+        marker=dict(color=CRIMSON, opacity=0.85, line=dict(color=BG, width=1)),
         hovertemplate="Score: %{x:.3f}<br>Count: %{y}<extra></extra>",
     ))
     fig.update_layout(
@@ -172,8 +175,8 @@ def evaluation_bar_chart(eval_results: list[dict]) -> Optional[go.Figure]:
     mrrs  = [r.get("mrr", 0)      for r in eval_results]
 
     fig = go.Figure([
-        go.Bar(name="Hit Rate@k", x=runs, y=hits, marker_color=BLUE),
-        go.Bar(name="MRR",        x=runs, y=mrrs, marker_color=CYAN),
+        go.Bar(name="Hit Rate@k", x=runs, y=hits, marker_color=CRIMSON),
+        go.Bar(name="MRR",        x=runs, y=mrrs, marker_color=TEAL),
     ])
     fig.update_layout(
         barmode="group",

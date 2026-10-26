@@ -36,7 +36,7 @@ def load_css():
         st.markdown(f"<style>{p.read_text(encoding='utf-8')}</style>", unsafe_allow_html=True)
 
 load_css()
-render_sidebar()
+render_sidebar(active_page="Analytics")
 
 st.markdown(
     """

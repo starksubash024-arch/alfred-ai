@@ -1,24 +1,58 @@
 """
-components/metric_cards.py — KPI card rendering helpers
+components/metric_cards.py — Renders the four multicolored metric cards matching NEMESIS reference design
 """
 
 import streamlit as st
 
 
 def render_kpi_cards(stats: dict) -> None:
-    """Render the four KPI cards at the top of the dashboard."""
-    c1, c2, c3, c4 = st.columns(4)
+    """Render the four multicolored metric cards."""
+    doc_count   = stats.get("doc_count", 0)
+    page_total  = stats.get("page_total", 0)
+    chunk_total = stats.get("chunk_total", 0)
+    query_count = stats.get("query_count", 0)
 
-    cards = [
-        (c1, "📄", stats.get("doc_count",   0), "Documents Indexed",   None),
-        (c2, "📃", stats.get("page_total",  0), "Pages Processed",     None),
-        (c3, "🧩", stats.get("chunk_total", 0), "Text Chunks",         None),
-        (c4, "❓", stats.get("query_count", 0), "Questions This Session", None),
-    ]
+    doc_sub   = "No documents yet" if doc_count == 0 else f"{doc_count} active files"
+    page_sub  = "No pages processed" if page_total == 0 else f"{page_total} pages indexed"
+    chunk_sub = "No chunks indexed" if chunk_total == 0 else f"{chunk_total} text chunks"
+    query_sub = "This session"
 
-    for col, icon, value, label, delta in cards:
-        with col:
-            st.markdown(
-                f'<div class="kpi-card"><span class="kpi-icon">{icon}</span><div class="kpi-value">{value:,}</div><div class="kpi-label">{label}</div></div>',
-                unsafe_allow_html=True,
-            )
+    cards_html = f"""<div class="metrics-row">
+<div class="metric-box card-crimson">
+<div class="metric-header">
+<div class="metric-icon-circle">📄</div>
+<span class="metric-label">Documents Uploaded</span>
+</div>
+<div class="metric-value">{doc_count:,}</div>
+<div class="metric-footnote">{doc_sub}</div>
+</div>
+
+<div class="metric-box card-blue">
+<div class="metric-header">
+<div class="metric-icon-circle">📃</div>
+<span class="metric-label">Total Pages Processed</span>
+</div>
+<div class="metric-value">{page_total:,}</div>
+<div class="metric-footnote">{page_sub}</div>
+</div>
+
+<div class="metric-box card-violet">
+<div class="metric-header">
+<div class="metric-icon-circle">🧩</div>
+<span class="metric-label">Indexed Text Chunks</span>
+</div>
+<div class="metric-value">{chunk_total:,}</div>
+<div class="metric-footnote">{chunk_sub}</div>
+</div>
+
+<div class="metric-box card-teal">
+<div class="metric-header">
+<div class="metric-icon-circle">💬</div>
+<span class="metric-label">Questions Asked</span>
+</div>
+<div class="metric-value">{query_count:,}</div>
+<div class="metric-footnote">{query_sub}</div>
+</div>
+</div>"""
+
+    st.markdown(cards_html, unsafe_allow_html=True)
