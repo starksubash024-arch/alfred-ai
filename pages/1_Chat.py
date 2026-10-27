@@ -27,7 +27,7 @@ from rag_engine import query as rag_query
 
 st.set_page_config(
     page_title=f"Chat — {APP_NAME}",
-    page_icon="💬",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -50,8 +50,8 @@ if "session_query_count" not in st.session_state:
 # ── Page header ────────────────────────────────────────────────────────────────
 st.markdown(
     """
-    <div class="page-title">💬 Chat with Documents</div>
-    <div class="page-subtitle">Ask questions grounded in your indexed documents.</div>
+    <div class="page-title">Chat with Documents</div>
+    <div class="page-subtitle">Ask questions grounded in your indexed documents with verified citations.</div>
     """,
     unsafe_allow_html=True,
 )

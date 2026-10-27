@@ -18,7 +18,7 @@ from evaluation import run_evaluation, load_eval_cases, EVAL_CASES_PATH
 
 st.set_page_config(
     page_title=f"Evaluation — {APP_NAME}",
-    page_icon="🧪",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -33,8 +33,8 @@ render_sidebar(active_page="Evaluation")
 
 st.markdown(
     """
-    <div class="page-title">🧪 Evaluation</div>
-    <div class="page-subtitle">Measure retrieval quality with real test cases.</div>
+    <div class="page-title">Retrieval Evaluation</div>
+    <div class="page-subtitle">Measure RAG retrieval accuracy and ranking performance with benchmark test cases.</div>
     """,
     unsafe_allow_html=True,
 )

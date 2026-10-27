@@ -22,7 +22,7 @@ from utils import human_readable_size
 
 st.set_page_config(
     page_title=f"Documents — {APP_NAME}",
-    page_icon="📚",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -37,8 +37,8 @@ render_sidebar(active_page="Documents")
 
 st.markdown(
     """
-    <div class="page-title">📚 Document Library</div>
-    <div class="page-subtitle">Manage your indexed PDFs.</div>
+    <div class="page-title">Document Library</div>
+    <div class="page-subtitle">Manage and inspect your indexed enterprise documents.</div>
     """,
     unsafe_allow_html=True,
 )

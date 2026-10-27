@@ -17,9 +17,10 @@ load_dotenv()
 ROOT_DIR = Path(__file__).parent.resolve()
 
 # ── App identity ──────────────────────────────────────────────────────────────
-APP_NAME = os.getenv("APP_NAME", "NEMESIS")
-APP_TAGLINE = "Your documents. One intelligent workspace."
-APP_VERSION = "2.0.0"
+APP_NAME = os.getenv("APP_NAME", "ALFRED AI")
+APP_TAGLINE = "Your Intelligent Document Workspace"
+APP_DESCRIPTION = "Upload documents, discover insights, ask questions, and make better decisions with AI."
+APP_VERSION = "3.0.0"
 
 # ── Ollama / LLM ─────────────────────────────────────────────────────────────
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")

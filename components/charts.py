@@ -10,26 +10,26 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 
-# NEMESIS colour palette that matches the dark crimson HUD theme
-CRIMSON = "#FF174F"
-RUBY    = "#D90D43"
-BLUE    = "#159CFF"
-VIOLET  = "#963DFF"
-TEAL    = "#00D8B5"
-GREEN   = "#00D8B5"
-ORANGE  = "#F59E0B"
-RED     = "#FF174F"
-BG      = "#0B0D17"
-CARD    = "#10121E"
-TEXT    = "#F4F5FA"
-MUTED   = "#A2A9BD"
+# ALFRED AI enterprise colour palette
+CRIMSON = "#E5485D"
+RUBY    = "#C93B4E"
+BLUE    = "#5798F5"
+SLATE   = "#777E8B"
+GREEN   = "#31B77A"
+AMBER   = "#F59E0B"
+RED     = "#E5485D"
+BG      = "#101114"
+CARD    = "#17191F"
+TEXT    = "#F4F5F7"
+MUTED   = "#A2A7B2"
+BORDER  = "#2A2D35"
 
 PLOTLY_THEME = dict(
     paper_bgcolor=BG,
     plot_bgcolor=CARD,
-    font=dict(color=TEXT, family="Inter, sans-serif", size=12),
+    font=dict(color=TEXT, family="Inter, -apple-system, sans-serif", size=12),
     margin=dict(l=40, r=20, t=40, b=40),
-    colorway=[CRIMSON, BLUE, VIOLET, TEAL, RUBY],
+    colorway=[CRIMSON, BLUE, GREEN, SLATE, RUBY],
 )
 
 
@@ -75,7 +75,7 @@ def chunks_per_doc_chart(doc_stats: list[dict]) -> Optional[go.Figure]:
         x=df["chunk_count"],
         y=df["filename"],
         orientation="h",
-        marker=dict(color=VIOLET),
+        marker=dict(color=SLATE),
         hovertemplate="<b>%{y}</b><br>Chunks: %{x}<extra></extra>",
     ))
     fig.update_layout(
@@ -176,7 +176,7 @@ def evaluation_bar_chart(eval_results: list[dict]) -> Optional[go.Figure]:
 
     fig = go.Figure([
         go.Bar(name="Hit Rate@k", x=runs, y=hits, marker_color=CRIMSON),
-        go.Bar(name="MRR",        x=runs, y=mrrs, marker_color=TEAL),
+        go.Bar(name="MRR",        x=runs, y=mrrs, marker_color=BLUE),
     ])
     fig.update_layout(
         barmode="group",

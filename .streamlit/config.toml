@@ -4,12 +4,15 @@ headless = true
 enableCORS = false
 enableXsrfProtection = false
 
+[client]
+showSidebarNav = false
+
 [theme]
 base = "dark"
-primaryColor = "#FF174F"
-backgroundColor = "#05060B"
-secondaryBackgroundColor = "#090B13"
-textColor = "#F4F5FA"
+primaryColor = "#E5485D"
+backgroundColor = "#101114"
+secondaryBackgroundColor = "#0C0D10"
+textColor = "#F4F5F7"
 font = "sans serif"
 
 [browser]

@@ -23,7 +23,7 @@ from summarizer import summarise_document, generate_extractive_summary
 
 st.set_page_config(
     page_title=f"Summaries — {APP_NAME}",
-    page_icon="📝",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -37,8 +37,8 @@ load_css()
 render_sidebar(active_page="Summaries")
 
 st.markdown(
-    """<div class="page-title">📝 Summaries</div>
-<div class="page-subtitle">AI-generated summaries grounded in your documents.</div>""",
+    """<div class="page-title">Document Summaries</div>
+<div class="page-subtitle">AI-generated structured syntheses and executive briefs grounded in your documents.</div>""",
     unsafe_allow_html=True,
 )
 

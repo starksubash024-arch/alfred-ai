@@ -25,7 +25,7 @@ from config import APP_NAME
 
 st.set_page_config(
     page_title=f"Analytics — {APP_NAME}",
-    page_icon="📊",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -40,8 +40,8 @@ render_sidebar(active_page="Analytics")
 
 st.markdown(
     """
-    <div class="page-title">📊 Analytics</div>
-    <div class="page-subtitle">Real-time insights from your document workspace.</div>
+    <div class="page-title">Workspace Analytics</div>
+    <div class="page-subtitle">Real-time retrieval metrics and document corpus distributions.</div>
     """,
     unsafe_allow_html=True,
 )
@@ -56,20 +56,19 @@ eval_history = analytics.get_evaluation_history()
 # ── Insight cards ──────────────────────────────────────────────────────────────
 ic1, ic2, ic3, ic4 = st.columns(4)
 cards = [
-    (ic1, "📃", insights["total_indexed_pages"],  "Indexed Pages"),
-    (ic2, "🧩", insights["total_indexed_chunks"], "Indexed Chunks"),
-    (ic3, "❓", insights["total_queries"],         "Total Queries"),
-    (ic4, "📄", insights.get("most_recent_doc") or "—", "Latest Document"),
+    (ic1, insights["total_indexed_pages"],  "Indexed Pages"),
+    (ic2, insights["total_indexed_chunks"], "Indexed Chunks"),
+    (ic3, insights["total_queries"],         "Total Queries"),
+    (ic4, insights.get("most_recent_doc") or "—", "Latest Document"),
 ]
-for col, icon, val, label in cards:
+for col, val, label in cards:
     with col:
         display_val = f"{val:,}" if isinstance(val, int) else str(val)
         st.markdown(
             f"""
-            <div class="kpi-card">
-                <span class="kpi-icon">{icon}</span>
-                <div class="kpi-value" style="font-size:1.4rem;">{display_val}</div>
-                <div class="kpi-label">{label}</div>
+            <div class="metric-box" style="padding:1rem;">
+                <div class="metric-value" style="font-size:1.6rem; margin-bottom:0.2rem;">{display_val}</div>
+                <div class="metric-label">{label}</div>
             </div>
             """,
             unsafe_allow_html=True,

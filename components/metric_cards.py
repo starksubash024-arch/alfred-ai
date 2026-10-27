@@ -1,12 +1,12 @@
 """
-components/metric_cards.py — Renders the four multicolored metric cards matching NEMESIS reference design
+components/metric_cards.py — Professional Enterprise Metric Cards for ALFRED AI
 """
 
 import streamlit as st
 
 
 def render_kpi_cards(stats: dict) -> None:
-    """Render the four multicolored metric cards matching the NEMESIS reference screenshot."""
+    """Render the four document intelligence metric cards with refined enterprise styling."""
     doc_count   = stats.get("doc_count", 0)
     page_total  = stats.get("page_total", 0)
     chunk_total = stats.get("chunk_total", 0)
@@ -18,10 +18,10 @@ def render_kpi_cards(stats: dict) -> None:
     query_sub = "This session"
 
     cards_html = f"""<div class="metrics-row">
-<div class="metric-box card-crimson">
+<div class="metric-box">
 <div class="metric-header">
 <div class="metric-icon-circle">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF174F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E5485D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
 <polyline points="14 2 14 8 20 8"></polyline>
 <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -34,10 +34,10 @@ def render_kpi_cards(stats: dict) -> None:
 <div class="metric-footnote">{doc_sub}</div>
 </div>
 
-<div class="metric-box card-blue">
+<div class="metric-box">
 <div class="metric-header">
 <div class="metric-icon-circle">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#159CFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5798F5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
 <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
 <line x1="9" y1="12" x2="15" y2="12"></line>
@@ -50,13 +50,13 @@ def render_kpi_cards(stats: dict) -> None:
 <div class="metric-footnote">{page_sub}</div>
 </div>
 
-<div class="metric-box card-violet">
+<div class="metric-box">
 <div class="metric-header">
 <div class="metric-icon-circle">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#963DFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-<polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-<line x1="12" y1="22.08" x2="12" y2="12"></line>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A2A7B2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+<polyline points="2 17 12 22 22 17"></polyline>
+<polyline points="2 12 12 17 22 12"></polyline>
 </svg>
 </div>
 <span class="metric-label">Indexed Text Chunks</span>
@@ -65,10 +65,10 @@ def render_kpi_cards(stats: dict) -> None:
 <div class="metric-footnote">{chunk_sub}</div>
 </div>
 
-<div class="metric-box card-teal">
+<div class="metric-box">
 <div class="metric-header">
 <div class="metric-icon-circle">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00D8B5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#31B77A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
 </svg>
 </div>

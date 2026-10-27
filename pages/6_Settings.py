@@ -21,7 +21,7 @@ from llm_service import check_ollama
 
 st.set_page_config(
     page_title=f"Settings — {APP_NAME}",
-    page_icon="⚙️",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -36,13 +36,13 @@ render_sidebar(active_page="Settings")
 
 st.markdown(
     """
-    <div class="page-title">⚙️ Settings</div>
-    <div class="page-subtitle">View configuration and adjust runtime options.</div>
+    <div class="page-title">Settings & Configuration</div>
+    <div class="page-subtitle">Inspect system parameters, inference endpoints, and storage metrics.</div>
     """,
     unsafe_allow_html=True,
 )
 
-tabs = st.tabs(["🔌 Ollama", "📄 Chunking", "🔍 Retrieval", "💾 Storage", "ℹ️ About"])
+tabs = st.tabs(["Inference Engine", "Chunking", "Retrieval", "Storage", "About"])
 
 # ── Tab: Ollama ────────────────────────────────────────────────────────────────
 with tabs[0]:
