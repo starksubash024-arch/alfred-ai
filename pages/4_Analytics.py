@@ -25,7 +25,7 @@ from config import APP_NAME
 
 st.set_page_config(
     page_title=f"Analytics — {APP_NAME}",
-    page_icon="⚡",
+    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded",
 )

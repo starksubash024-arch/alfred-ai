@@ -10,26 +10,26 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 
-# ALFRED AI enterprise colour palette
-CRIMSON = "#E5485D"
-RUBY    = "#C93B4E"
-BLUE    = "#5798F5"
-SLATE   = "#777E8B"
-GREEN   = "#31B77A"
-AMBER   = "#F59E0B"
-RED     = "#E5485D"
-BG      = "#101114"
-CARD    = "#17191F"
-TEXT    = "#F4F5F7"
-MUTED   = "#A2A7B2"
-BORDER  = "#2A2D35"
+# ALFRED AI Signature Edition colour palette
+CRIMSON = "#F0445E"
+CYAN    = "#46D9F5"
+VIOLET  = "#A78BFA"
+EMERALD = "#45D6A1"
+GOLD    = "#F6C66A"
+CORAL   = "#FF806B"
+SLATE   = "#6C798E"
+BG      = "#0A0B0F"
+CARD    = "#171B23"
+TEXT    = "#F5F7FB"
+MUTED   = "#A4AFC0"
+BORDER  = "#303746"
 
 PLOTLY_THEME = dict(
     paper_bgcolor=BG,
     plot_bgcolor=CARD,
     font=dict(color=TEXT, family="Inter, -apple-system, sans-serif", size=12),
     margin=dict(l=40, r=20, t=40, b=40),
-    colorway=[CRIMSON, BLUE, GREEN, SLATE, RUBY],
+    colorway=[CRIMSON, CYAN, VIOLET, EMERALD, GOLD],
 )
 
 
@@ -48,7 +48,7 @@ def pages_per_doc_chart(doc_stats: list[dict]) -> Optional[go.Figure]:
         orientation="h",
         marker=dict(
             color=df["page_count"],
-            colorscale=[[0, BLUE], [1, CRIMSON]],
+            colorscale=[[0, CYAN], [1, CRIMSON]],
             showscale=False,
         ),
         hovertemplate="<b>%{y}</b><br>Pages: %{x}<extra></extra>",
@@ -93,10 +93,10 @@ def status_donut_chart(status_dist: dict[str, int]) -> Optional[go.Figure]:
         return None
 
     color_map = {
-        "indexed":  GREEN,
-        "pending":  ORANGE,
-        "indexing": BLUE,
-        "error":    RED,
+        "indexed":  EMERALD,
+        "pending":  GOLD,
+        "indexing": CYAN,
+        "error":    CRIMSON,
     }
 
     labels = list(status_dist.keys())
@@ -132,7 +132,7 @@ def query_timeline_chart(timeline: list[dict]) -> Optional[go.Figure]:
     fig = go.Figure(go.Bar(
         x=df["date"],
         y=df["count"],
-        marker=dict(color=BLUE, opacity=0.85),
+        marker=dict(color=CYAN, opacity=0.85),
         hovertemplate="<b>%{x}</b><br>Queries: %{y}<extra></extra>",
     ))
     fig.update_layout(
@@ -176,7 +176,7 @@ def evaluation_bar_chart(eval_results: list[dict]) -> Optional[go.Figure]:
 
     fig = go.Figure([
         go.Bar(name="Hit Rate@k", x=runs, y=hits, marker_color=CRIMSON),
-        go.Bar(name="MRR",        x=runs, y=mrrs, marker_color=BLUE),
+        go.Bar(name="MRR",        x=runs, y=mrrs, marker_color=CYAN),
     ])
     fig.update_layout(
         barmode="group",

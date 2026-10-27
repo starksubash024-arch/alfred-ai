@@ -141,7 +141,7 @@ with chat_container:
     else:
         for msg in st.session_state.messages:
             role   = msg["role"]
-            avatar = "👤" if role == "user" else "🤖"
+            avatar = "👤" if role == "user" else "🛡️"
             with st.chat_message(role, avatar=avatar):
                 st.markdown(msg["content"])
                 if role == "assistant" and msg.get("chunks"):
@@ -163,7 +163,7 @@ if question:
         st.markdown(question)
 
     # Generate answer
-    with st.chat_message("assistant", avatar="🤖"):
+    with st.chat_message("assistant", avatar="🛡️"):
         with st.spinner("Searching documents and generating answer…"):
             result = rag_query(
                 question=question,

@@ -1,6 +1,6 @@
 """
 components/sidebar.py — ALFRED AI Left Sidebar Navigation
-Professional Enterprise Document Intelligence Workspace
+Signature Edition with Butler Crest & Black Titanium Surfaces
 """
 
 import streamlit as st
@@ -9,33 +9,42 @@ from pathlib import Path
 import database as db
 from llm_service import check_ollama
 from config import APP_NAME, APP_TAGLINE, APP_VERSION, OLLAMA_MODEL
+from components.assets_loader import get_asset_uri
 
 
 def _load_css() -> None:
-    """Inject the custom CSS."""
+    """Inject the custom CSS with stationary background texture."""
     css_path = Path(__file__).parent.parent / "styles" / "custom.css"
     if css_path.exists():
-        st.markdown(f"<style>{css_path.read_text(encoding='utf-8')}</style>", unsafe_allow_html=True)
+        titanium_uri = get_asset_uri("alfred_titanium_bg.jpg")
+        css_text = css_path.read_text(encoding="utf-8")
+        extra_vars = f"""
+        :root {{
+            --bg-titanium-uri: url('{titanium_uri}');
+        }}
+        """ if titanium_uri else ""
+        st.markdown(f"<style>{extra_vars}\n{css_text}</style>", unsafe_allow_html=True)
 
 
 def render_sidebar(active_page: str = "Dashboard") -> None:
-    """Render the ALFRED AI enterprise left sidebar."""
+    """Render the ALFRED AI signature sidebar with Butler Crest."""
     _load_css()
+    crest_uri = get_asset_uri("alfred_crest.png")
 
     with st.sidebar:
-        # ── ALFRED AI Monogram & Wordmark ─────────────────────────────────────
+        # ── Butler Crest & Brand Wordmark ─────────────────────────────────────
+        crest_tag = (
+            f'<img src="{crest_uri}" class="alfred-crest-img" alt="ALFRED Butler Crest" />'
+            if crest_uri
+            else '<span style="font-size:1.8rem;">🛡️</span>'
+        )
         st.markdown(
-            """
+            f"""
             <div class="alfred-sidebar-brand">
-                <div class="alfred-brand-logo">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 3L4 21H8.5L10.2 16.5H13.8L15.5 21H20L12 3Z" fill="#F4F5F7"/>
-                        <path d="M11 14.5L12 11.5L13 14.5H11Z" fill="#E5485D"/>
-                    </svg>
-                </div>
+                {crest_tag}
                 <div class="alfred-brand-text">
                     <span class="alfred-brand-title">ALFRED AI</span>
-                    <span class="alfred-brand-tagline">Intelligent Document Workspace</span>
+                    <span class="alfred-brand-tagline">Intelligent Workspace</span>
                 </div>
             </div>
             """,
@@ -53,7 +62,7 @@ def render_sidebar(active_page: str = "Dashboard") -> None:
 
         st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
 
-        # ── Ollama Status Card ───────────────────────────────────────────────
+        # ── Inference Engine Status Card ─────────────────────────────────────
         @st.cache_data(ttl=30, show_spinner=False)
         def _check():
             return check_ollama()
@@ -96,11 +105,11 @@ def render_sidebar(active_page: str = "Dashboard") -> None:
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; margin-bottom:5px;">
                     <span style="color:var(--text-secondary); display:flex; align-items:center; gap:6px;">📄 Documents</span>
-                    <span style="font-weight:600; color:var(--text-primary);">{stats["doc_count"]}</span>
+                    <span style="font-weight:700; color:var(--text-primary);">{stats["doc_count"]}</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem;">
                     <span style="color:var(--text-secondary); display:flex; align-items:center; gap:6px;">⚡ Index Status</span>
-                    <span style="font-weight:600; color:var(--accent-success);">Active</span>
+                    <span style="font-weight:700; color:var(--accent-emerald);">Active</span>
                 </div>
             </div>
             """,
@@ -111,8 +120,8 @@ def render_sidebar(active_page: str = "Dashboard") -> None:
         st.markdown(
             f"""
             <div class="sidebar-footer-box">
-                <div class="sidebar-footer-version">ALFRED AI Enterprise · v{APP_VERSION}</div>
-                <div>100% Local & Private Execution</div>
+                <div class="sidebar-footer-version">ALFRED AI Signature · v{APP_VERSION}</div>
+                <div>Air-Gapped Local Intelligence</div>
             </div>
             """,
             unsafe_allow_html=True,

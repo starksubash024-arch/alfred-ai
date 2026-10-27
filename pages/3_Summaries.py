@@ -23,7 +23,7 @@ from summarizer import summarise_document, generate_extractive_summary
 
 st.set_page_config(
     page_title=f"Summaries — {APP_NAME}",
-    page_icon="⚡",
+    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded",
 )

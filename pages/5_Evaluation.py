@@ -18,7 +18,7 @@ from evaluation import run_evaluation, load_eval_cases, EVAL_CASES_PATH
 
 st.set_page_config(
     page_title=f"Evaluation — {APP_NAME}",
-    page_icon="⚡",
+    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded",
 )

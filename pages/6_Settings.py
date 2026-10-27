@@ -21,7 +21,7 @@ from llm_service import check_ollama
 
 st.set_page_config(
     page_title=f"Settings — {APP_NAME}",
-    page_icon="⚡",
+    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded",
 )

@@ -1,17 +1,16 @@
 """
-app.py — ALFRED AI Document Intelligence · Main Dashboard
+app.py — ALFRED AI Signature Edition · Main Intelligence Dashboard
 
-Professional Enterprise Document Workspace:
-  - Charcoal & crimson enterprise palette (#101114, #17191F, #E5485D)
-  - Clean stationary layout (zero parallax, zero dragon textures)
-  - Minimalist ALFRED AI geometric branding
-  - Refined top header with search field, time, user avatar, and Local Mode badge
-  - Hero greeting with "Good morning, Stark", status label, and enterprise subtitle
-  - Four balanced statistic cards (Documents, Pages, Chunks, Queries)
-  - Clean PDF upload zone with drag-and-drop ingestion and progress feedback
-  - Side-by-side Recent Documents & Recent Activity panels
-  - Right Rail with Quick Actions, Recent Queries, and Enterprise Security card
-  - Bottom ALFRED AI Assistant with scope selector, top-k slider, and real RAG querying
+Distinctive Black Titanium & Butler Crest Intelligence Workspace:
+  - Rich, layered palette (Obsidian, Graphite, Black Titanium, Crimson, Cyan, Violet, Emerald)
+  - Stationary atmospheric black titanium background texture
+  - Signature Butler Crest emblem integration
+  - Executive intelligence cockpit hero section (zero parallax, static)
+  - Four semantic data cards (Documents, Pages, Chunks, Queries)
+  - Signature document intake surface with multi-file drag-and-drop
+  - Recent Documents & Activity panels with live status indicators
+  - Right Rail with Quick Actions, Recent Queries, and Data Enclave security card
+  - Bottom ALFRED AI Assistant with scope filtering and verified source citations
 """
 
 import sys
@@ -30,22 +29,30 @@ db.init_db()
 import rag_engine
 from components.sidebar import render_sidebar
 from components.metric_cards import render_kpi_cards
+from components.assets_loader import get_asset_uri
 from config import APP_NAME, APP_TAGLINE, MAX_UPLOAD_SIZE_MB, DEFAULT_TOP_K
 from utils import human_readable_size, truncate_text
 
 # ── Page Configuration ────────────────────────────────────────────────────────
 st.set_page_config(
     page_title=f"{APP_NAME} — Intelligent Workspace",
-    page_icon="⚡",
+    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# ── Load CSS ──────────────────────────────────────────────────────────────────
+# ── Load CSS with Stationary Background Texture ───────────────────────────────
 def load_css():
     css_path = Path(__file__).parent / "styles" / "custom.css"
     if css_path.exists():
-        st.markdown(f"<style>{css_path.read_text(encoding='utf-8')}</style>", unsafe_allow_html=True)
+        titanium_uri = get_asset_uri("alfred_titanium_bg.jpg")
+        css_text = css_path.read_text(encoding="utf-8")
+        extra_vars = f"""
+        :root {{
+            --bg-titanium-uri: url('{titanium_uri}');
+        }}
+        """ if titanium_uri else ""
+        st.markdown(f"<style>{extra_vars}\n{css_text}</style>", unsafe_allow_html=True)
 
 load_css()
 
@@ -63,11 +70,12 @@ if "assistant_answer" not in st.session_state:
     st.session_state.assistant_answer = None
 
 # ── Top Header Navigation Bar ─────────────────────────────────────────────────
+crest_uri = get_asset_uri("alfred_crest.png")
 now_str = datetime.now().strftime("%b %d, %Y  %H:%M")
 
 header_html = f"""<div class="alfred-top-header">
 <div class="top-search-bar">
-<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#777E8B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6C798E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
 <circle cx="11" cy="11" r="8"></circle>
 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
 </svg>
@@ -96,27 +104,35 @@ else:
 col_main, col_rail = st.columns([2.4, 0.95], gap="large")
 
 with col_main:
-    # ── 1. Clean Enterprise Hero Greeting ─────────────────────────────────────
+    # ── 1. Signature Hero Greeting & Executive Intelligence Cockpit ───────────
     hero_html = f"""<div class="alfred-hero">
 <div class="hero-content">
-<div class="hero-status-tag"><span class="hero-status-dot"></span><span>ALFRED INTELLIGENCE</span></div>
+<div class="hero-status-pill"><span class="hero-status-pulse"></span><span>ALFRED INTELLIGENCE SYSTEM</span></div>
 <h1 class="hero-greeting">{greeting_prefix} <span class="hero-name">Stark</span></h1>
-<p class="hero-subtext">Your documents, knowledge, and AI-powered insights — all in one workspace.</p>
+<p class="hero-subtext">Your knowledge, connected. Your decisions, better informed.</p>
 </div>
-<div class="hero-accent-graphic">
-<svg width="110" height="80" viewBox="0 0 110 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="10" y="8" width="90" height="64" rx="8" stroke="#2A2D35" stroke-width="1.5" stroke-dasharray="3 3"/>
-<rect x="24" y="20" width="62" height="40" rx="6" fill="#1D2027" stroke="#2A2D35" stroke-width="1.2"/>
-<circle cx="55" cy="40" r="9" fill="rgba(229, 72, 93, 0.12)" stroke="#E5485D" stroke-width="1.5"/>
-<path d="M47 40H63M55 32V48" stroke="#E5485D" stroke-width="1.5" stroke-linecap="round"/>
-<line x1="32" y1="28" x2="42" y2="28" stroke="#777E8B" stroke-width="1.2" stroke-linecap="round"/>
-<line x1="32" y1="52" x2="45" y2="52" stroke="#777E8B" stroke-width="1.2" stroke-linecap="round"/>
+<div class="hero-cockpit">
+<div class="cockpit-title">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C8D0DC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+<line x1="8" y1="21" x2="16" y2="21"></line>
+<line x1="12" y1="17" x2="12" y2="21"></line>
 </svg>
+<span>Intelligence Status</span>
+</div>
+<div class="cockpit-row">
+<span class="cockpit-label">Vector Engine</span>
+<span class="cockpit-val"><span class="val-dot cyan"></span> FAISS FlatIP (384-d)</span>
+</div>
+<div class="cockpit-row">
+<span class="cockpit-label">Inference Enclave</span>
+<span class="cockpit-val"><span class="val-dot emerald"></span> Air-Gapped Local</span>
+</div>
 </div>
 </div>"""
     st.markdown(hero_html, unsafe_allow_html=True)
 
-    # ── 2. Four Statistic Cards ───────────────────────────────────────────────
+    # ── 2. Four Semantic Metric Cards ─────────────────────────────────────────
     try:
         stats = db.get_stats()
     except Exception:
@@ -124,19 +140,24 @@ with col_main:
 
     render_kpi_cards(stats)
 
-    # ── 3. Central PDF Upload Drop Zone ───────────────────────────────────────
+    # ── 3. Signature Document Intake Drop Zone ────────────────────────────────
     upload_html = """<div class="alfred-upload-container">
 <div class="upload-center-content">
 <div class="upload-icon-box">
-<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
 <polyline points="17 8 12 3 7 8"/>
 <line x1="12" y1="3" x2="12" y2="15"/>
 </svg>
 </div>
-<div class="upload-main-title">Upload your documents</div>
-<div class="upload-helper-text">Drag and drop your files here, or browse your computer.</div>
-<div class="upload-footer-text">Supports multiple files • PDF only • Max 50MB each</div>
+<div class="upload-main-title">Bring your knowledge into ALFRED</div>
+<div class="upload-helper-text">Drop your documents here or browse your computer.</div>
+<div class="upload-badges-row">
+<span class="upload-badge-chip">📄 PDF Only</span>
+<span class="upload-badge-chip">⚡ Max 50MB</span>
+<span class="upload-badge-chip">🔒 100% Local Ingestion</span>
+<span class="upload-badge-chip">🧠 Auto-Vectorized</span>
+</div>
 </div>
 </div>"""
     st.markdown(upload_html, unsafe_allow_html=True)
@@ -266,7 +287,7 @@ with col_main:
                 """<div class="panel-empty-state">
 <div class="panel-empty-icon-circle">🕐</div>
 <div class="panel-empty-title">No recent activity</div>
-<div class="panel-empty-sub">Your recent actions will appear here</div>
+<div class="panel-empty-sub">Your recent queries and indexing events will appear here</div>
 </div>
 </div>""",
                 unsafe_allow_html=True,
@@ -274,12 +295,12 @@ with col_main:
         else:
             act_items_html = "<div>"
             for ev in activity:
-                color = "#E5485D" if ev.get("event_type") == "query" else "#31B77A"
+                color = "#F0445E" if ev.get("event_type") == "query" else "#45D6A1"
                 ts = datetime.fromtimestamp(ev.get("timestamp", 0)).strftime("%b %d, %H:%M")
                 act_items_html += f"""<div style="display:flex; justify-content:space-between; align-items:center; padding:0.55rem 0; border-bottom:1px solid rgba(255,255,255,0.03); font-size:0.75rem;">
 <div style="display:flex; align-items:center; gap:8px;">
-<span style="color:{color}; font-size:0.7rem;">●</span>
-<span style="color:var(--text-primary); font-weight:500;">{truncate_text(ev.get('description',''), 32)}</span>
+<span style="color:{color}; font-size:0.75rem;">●</span>
+<span style="color:var(--text-primary); font-weight:600;">{truncate_text(ev.get('description',''), 32)}</span>
 </div>
 <span style="color:var(--text-muted); font-size:0.7rem;">{ts}</span>
 </div>"""
@@ -289,14 +310,17 @@ with col_main:
     # ── 5. Bottom: ALFRED AI Assistant ────────────────────────────────────────
     st.markdown("""<div class="alfred-assistant-panel">""", unsafe_allow_html=True)
     
+    crest_avatar_tag = (
+        f'<img src="{crest_uri}" style="width:26px; height:32px; object-fit:contain;" alt="ALFRED Crest" />'
+        if crest_uri
+        else '🛡️'
+    )
     col_hdr_left, col_hdr_right = st.columns([3.0, 2.4])
     with col_hdr_left:
         st.markdown(
-            """<div class="assistant-header-left">
+            f"""<div class="assistant-header-left">
 <div class="assistant-avatar-box">
-<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-<path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-</svg>
+{crest_avatar_tag}
 </div>
 <div class="assistant-title-group">
 <span class="assistant-title">ALFRED AI Assistant</span>
@@ -326,7 +350,7 @@ with col_main:
         user_q = st.text_input(
             "Ask anything about your documents...",
             value=default_q,
-            placeholder="Search documents, ask questions...",
+            placeholder="Type your question or query...",
             label_visibility="collapsed",
             key="alfred_main_q",
         )
@@ -349,12 +373,12 @@ with col_main:
     # Display Answer & Source Cards if available
     if st.session_state.assistant_answer:
         ans = st.session_state.assistant_answer
-        st.markdown("<div style='margin-top:12px; padding:14px 18px; background:var(--bg-elevated); border-radius:8px; border:1px solid var(--border-neutral);'>", unsafe_allow_html=True)
+        st.markdown("<div style='margin-top:12px; padding:14px 18px; background:var(--bg-surface); border-radius:10px; border:1px solid var(--border-fine);'>", unsafe_allow_html=True)
         st.markdown(f"**Answer:**\n\n{ans.get('answer', 'No answer generated.')}")
         
         used_chunks = ans.get("used_chunks", [])
         if used_chunks:
-            st.markdown("<div style='font-size:0.75rem; font-weight:600; color:var(--accent-crimson); margin-top:10px;'>📎 Retrieved Evidence:</div>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size:0.75rem; font-weight:700; color:var(--accent-crimson); margin-top:10px;'>📎 Retrieved Evidence:</div>", unsafe_allow_html=True)
             for i, chk in enumerate(used_chunks, 1):
                 p_num = chk.get("page_number", "?")
                 fname = chk.get("filename", "Document")
@@ -378,7 +402,7 @@ with col_rail:
 
 <a href="./Summaries" target="_self" class="quick-action-card">
 <div class="quick-action-left">
-<div class="qa-icon-box">
+<div class="qa-icon-box crimson">
 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
 <polyline points="14 2 14 8 20 8"></polyline>
@@ -396,7 +420,7 @@ with col_rail:
 
 <a href="./Chat" target="_self" class="quick-action-card">
 <div class="quick-action-left">
-<div class="qa-icon-box">
+<div class="qa-icon-box cyan">
 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
 </svg>
@@ -411,7 +435,7 @@ with col_rail:
 
 <a href="./Documents" target="_self" class="quick-action-card">
 <div class="quick-action-left">
-<div class="qa-icon-box">
+<div class="qa-icon-box violet">
 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
 </svg>
@@ -426,7 +450,7 @@ with col_rail:
 
 <a href="./Analytics" target="_self" class="quick-action-card">
 <div class="quick-action-left">
-<div class="qa-icon-box">
+<div class="qa-icon-box emerald">
 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <line x1="18" y1="20" x2="18" y2="10"></line>
 <line x1="12" y1="20" x2="12" y2="4"></line>
@@ -435,7 +459,7 @@ with col_rail:
 </div>
 <div class="qa-text-col">
 <span class="qa-title">View Analytics</span>
-<span class="qa-desc">See charts and retrieval metrics</span>
+<span class="qa-desc">Inspect retrieval & volume trends</span>
 </div>
 </div>
 <span class="qa-chevron">›</span>
@@ -469,22 +493,21 @@ with col_rail:
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # ── Right Rail 3: Enterprise Security & Local Execution Card ─────────────
+    # ── Right Rail 3: Signature Enterprise Enclave Card ───────────────────────
     st.markdown(
         """<div class="alfred-security-card">
 <div class="security-card-header">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E5485D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F0445E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
 </svg>
-<span>Enterprise Privacy & Security</span>
+<span>Enterprise Data Enclave</span>
 </div>
 <div class="security-card-sub">
-All vector indexing, embeddings, and query processing execute strictly on your local infrastructure.
+All vector indexes, embeddings, and query syntheses execute strictly within your local environment.
 </div>
 <div class="security-badge-row">
 <span class="security-badge-dot"></span>
-<span>Local Execution · Zero External Telemetry</span>
+<span>100% On-Premise · Air-Gapped Intelligence</span>
 </div>
 </div>""",
         unsafe_allow_html=True,

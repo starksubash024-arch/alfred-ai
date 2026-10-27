@@ -22,7 +22,7 @@ from utils import human_readable_size
 
 st.set_page_config(
     page_title=f"Documents — {APP_NAME}",
-    page_icon="⚡",
+    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
