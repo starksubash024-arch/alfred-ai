@@ -24,9 +24,13 @@ st.set_page_config(
 )
 
 def load_css():
+    from components.assets_loader import get_asset_uri
     p = Path(__file__).parent.parent / "styles" / "custom.css"
     if p.exists():
-        st.markdown(f"<style>{p.read_text(encoding='utf-8')}</style>", unsafe_allow_html=True)
+        aurora_uri = get_asset_uri("alfred_aurora_bg.jpg")
+        css_text = p.read_text(encoding="utf-8")
+        extra_vars = f":root {{ --bg-aurora-uri: url('{aurora_uri}'); }}" if aurora_uri else ""
+        st.markdown(f"<style>{extra_vars}\n{css_text}</style>", unsafe_allow_html=True)
 
 load_css()
 render_sidebar(active_page="Evaluation")

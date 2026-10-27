@@ -1,14 +1,14 @@
 """
-app.py — ALFRED AI Signature Edition · Main Intelligence Dashboard
+app.py — ALFRED AI Aurora Mint Edition · Main Intelligence Dashboard
 
-Distinctive Black Titanium & Butler Crest Intelligence Workspace:
-  - Rich, layered palette (Obsidian, Graphite, Black Titanium, Crimson, Cyan, Violet, Emerald)
-  - Stationary atmospheric black titanium background texture
-  - Signature Butler Crest emblem integration
-  - Executive intelligence cockpit hero section (zero parallax, static)
-  - Four semantic data cards (Documents, Pages, Chunks, Queries)
-  - Signature document intake surface with multi-file drag-and-drop
-  - Recent Documents & Activity panels with live status indicators
+Fresh, Colorful & Premium AI Intelligence Workspace:
+  - Aurora Mint Palette (Pearl Mint, Soft Porcelain, Pale Sage, White Mist, Deep Jade, Fresh Mint)
+  - Stationary embossed dragon-scale background texture
+  - Butler Crest emblem with Deep Jade & Fresh Mint identity
+  - Editorial hero section with personalized greeting & intelligence cockpit HUD
+  - Four distinctive metric cards (Documents Hero, Pages, Chunks, Questions)
+  - Inviting document intake surface with multi-file drag-and-drop
+  - Side-by-side Recent Documents & Activity panels with live status indicators
   - Right Rail with Quick Actions, Recent Queries, and Data Enclave security card
   - Bottom ALFRED AI Assistant with scope filtering and verified source citations
 """
@@ -45,13 +45,13 @@ st.set_page_config(
 def load_css():
     css_path = Path(__file__).parent / "styles" / "custom.css"
     if css_path.exists():
-        titanium_uri = get_asset_uri("alfred_titanium_bg.jpg")
+        aurora_uri = get_asset_uri("alfred_aurora_bg.jpg")
         css_text = css_path.read_text(encoding="utf-8")
         extra_vars = f"""
         :root {{
-            --bg-titanium-uri: url('{titanium_uri}');
+            --bg-aurora-uri: url('{aurora_uri}');
         }}
-        """ if titanium_uri else ""
+        """ if aurora_uri else ""
         st.markdown(f"<style>{extra_vars}\n{css_text}</style>", unsafe_allow_html=True)
 
 load_css()
@@ -69,29 +69,10 @@ if "assistant_question" not in st.session_state:
 if "assistant_answer" not in st.session_state:
     st.session_state.assistant_answer = None
 
-# ── Top Header Navigation Bar ─────────────────────────────────────────────────
-crest_uri = get_asset_uri("alfred_crest.png")
-now_str = datetime.now().strftime("%b %d, %Y  %H:%M")
+# ── Personalized User Greeting ────────────────────────────────────────────────
+user_name = os.environ.get("USERNAME") or os.environ.get("USER") or "Executive"
+user_initial = user_name[0].upper() if user_name else "A"
 
-header_html = f"""<div class="alfred-top-header">
-<div class="top-search-bar">
-<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6C798E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-<circle cx="11" cy="11" r="8"></circle>
-<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-</svg>
-<span>Search documents, ask questions...</span>
-</div>
-<div class="top-header-right">
-<span class="header-datetime">{now_str}</span>
-<div class="user-avatar" title="Stark">S</div>
-<div class="header-badge">
-<span class="header-badge-dot"></span> Local Mode
-</div>
-</div>
-</div>"""
-st.markdown(header_html, unsafe_allow_html=True)
-
-# ── Greeting calculation ──────────────────────────────────────────────────────
 cur_hour = datetime.now().hour
 if cur_hour < 12:
     greeting_prefix = "Good morning,"
@@ -100,20 +81,48 @@ elif cur_hour < 17:
 else:
     greeting_prefix = "Good evening,"
 
+now_str = datetime.now().strftime("%b %d, %Y  %H:%M")
+crest_uri = get_asset_uri("alfred_crest.png")
+
+# ── Top Header Navigation Bar ─────────────────────────────────────────────────
+header_html = f"""<div class="alfred-top-header">
+<div class="top-search-bar">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#62786D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+</svg>
+<span>Search corporate documents, ask intelligence queries...</span>
+</div>
+<div class="top-header-right">
+<span class="header-datetime">{now_str}</span>
+<div class="user-avatar" title="{user_name}">{user_initial}</div>
+<div class="header-badge">
+<span class="header-badge-dot"></span> Zero-Telemetry Enclave
+</div>
+</div>
+</div>"""
+st.markdown(header_html, unsafe_allow_html=True)
+
 # ── Main Layout: Center Workspace (col_main) & Right Rail (col_rail) ──────────
 col_main, col_rail = st.columns([2.4, 0.95], gap="large")
 
 with col_main:
-    # ── 1. Signature Hero Greeting & Executive Intelligence Cockpit ───────────
+    # ── 1. Aurora Mint Hero Greeting & Intelligence Cockpit HUD ───────────────
     hero_html = f"""<div class="alfred-hero">
 <div class="hero-content">
-<div class="hero-status-pill"><span class="hero-status-pulse"></span><span>ALFRED INTELLIGENCE SYSTEM</span></div>
-<h1 class="hero-greeting">{greeting_prefix} <span class="hero-name">Stark</span></h1>
+<div class="hero-status-pill"><span class="hero-status-pulse"></span><span>✦ ALFRED INTELLIGENCE</span></div>
+<h1 class="hero-greeting">{greeting_prefix} <span class="hero-name">{user_name}</span></h1>
 <p class="hero-subtext">Your knowledge, connected. Your decisions, better informed.</p>
+<div class="hero-chips-row">
+<span class="hero-chip">✦ Ask ALFRED</span>
+<span class="hero-chip">✦ Executive Summary</span>
+<span class="hero-chip">✦ Risk Matrix</span>
+<span class="hero-chip">✦ Strategic Synthesis</span>
+</div>
 </div>
 <div class="hero-cockpit">
 <div class="cockpit-title">
-<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C8D0DC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#155E52" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
 <line x1="8" y1="21" x2="16" y2="21"></line>
 <line x1="12" y1="17" x2="12" y2="21"></line>
@@ -121,18 +130,22 @@ with col_main:
 <span>Intelligence Status</span>
 </div>
 <div class="cockpit-row">
-<span class="cockpit-label">Vector Engine</span>
+<span class="cockpit-label">Vector Store</span>
 <span class="cockpit-val"><span class="val-dot cyan"></span> FAISS FlatIP (384-d)</span>
 </div>
 <div class="cockpit-row">
 <span class="cockpit-label">Inference Enclave</span>
 <span class="cockpit-val"><span class="val-dot emerald"></span> Air-Gapped Local</span>
 </div>
+<div class="cockpit-row">
+<span class="cockpit-label">Corpus Health</span>
+<span class="cockpit-val"><span class="val-dot emerald"></span> Optimal</span>
+</div>
 </div>
 </div>"""
     st.markdown(hero_html, unsafe_allow_html=True)
 
-    # ── 2. Four Semantic Metric Cards ─────────────────────────────────────────
+    # ── 2. Four Distinctive Aurora Mint Metric Cards ───────────────────────────
     try:
         stats = db.get_stats()
     except Exception:
@@ -140,7 +153,7 @@ with col_main:
 
     render_kpi_cards(stats)
 
-    # ── 3. Signature Document Intake Drop Zone ────────────────────────────────
+    # ── 3. Inviting Document Intake Drop Zone ─────────────────────────────────
     upload_html = """<div class="alfred-upload-container">
 <div class="upload-center-content">
 <div class="upload-icon-box">
@@ -151,12 +164,12 @@ with col_main:
 </svg>
 </div>
 <div class="upload-main-title">Bring your knowledge into ALFRED</div>
-<div class="upload-helper-text">Drop your documents here or browse your computer.</div>
+<div class="upload-helper-text">Upload your documents and turn scattered information into searchable intelligence.</div>
 <div class="upload-badges-row">
-<span class="upload-badge-chip">📄 PDF Only</span>
+<span class="upload-badge-chip">📄 PDF Corpus</span>
 <span class="upload-badge-chip">⚡ Max 50MB</span>
 <span class="upload-badge-chip">🔒 100% Local Ingestion</span>
-<span class="upload-badge-chip">🧠 Auto-Vectorized</span>
+<span class="upload-badge-chip">🧠 Automated Vectorization</span>
 </div>
 </div>
 </div>"""
@@ -242,7 +255,7 @@ with col_main:
                 """<div class="panel-empty-state">
 <div class="panel-empty-icon-circle">📄</div>
 <div class="panel-empty-title">No documents yet</div>
-<div class="panel-empty-sub">Upload your first PDF to get started</div>
+<div class="panel-empty-sub">Upload your first PDF to begin building your knowledge workspace.</div>
 </div>
 </div>""",
                 unsafe_allow_html=True,
@@ -287,7 +300,7 @@ with col_main:
                 """<div class="panel-empty-state">
 <div class="panel-empty-icon-circle">🕐</div>
 <div class="panel-empty-title">No recent activity</div>
-<div class="panel-empty-sub">Your recent queries and indexing events will appear here</div>
+<div class="panel-empty-sub">Your recent queries and indexing events will appear here.</div>
 </div>
 </div>""",
                 unsafe_allow_html=True,
@@ -295,23 +308,23 @@ with col_main:
         else:
             act_items_html = "<div>"
             for ev in activity:
-                color = "#F0445E" if ev.get("event_type") == "query" else "#45D6A1"
+                color = "#155E52" if ev.get("event_type") == "query" else "#32B985"
                 ts = datetime.fromtimestamp(ev.get("timestamp", 0)).strftime("%b %d, %H:%M")
-                act_items_html += f"""<div style="display:flex; justify-content:space-between; align-items:center; padding:0.55rem 0; border-bottom:1px solid rgba(255,255,255,0.03); font-size:0.75rem;">
+                act_items_html += f"""<div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0; border-bottom:1px solid #E4EEE6; font-size:0.78rem;">
 <div style="display:flex; align-items:center; gap:8px;">
 <span style="color:{color}; font-size:0.75rem;">●</span>
-<span style="color:var(--text-primary); font-weight:600;">{truncate_text(ev.get('description',''), 32)}</span>
+<span style="color:var(--text-deep-forest); font-weight:700;">{truncate_text(ev.get('description',''), 32)}</span>
 </div>
-<span style="color:var(--text-muted); font-size:0.7rem;">{ts}</span>
+<span style="color:var(--text-muted); font-size:0.72rem;">{ts}</span>
 </div>"""
             act_items_html += "</div></div>"
             st.markdown(act_items_html, unsafe_allow_html=True)
 
     # ── 5. Bottom: ALFRED AI Assistant ────────────────────────────────────────
     st.markdown("""<div class="alfred-assistant-panel">""", unsafe_allow_html=True)
-    
+
     crest_avatar_tag = (
-        f'<img src="{crest_uri}" style="width:26px; height:32px; object-fit:contain;" alt="ALFRED Crest" />'
+        f'<img src="{crest_uri}" style="width:28px; height:34px; object-fit:contain;" alt="ALFRED Crest" />'
         if crest_uri
         else '🛡️'
     )
@@ -373,18 +386,18 @@ with col_main:
     # Display Answer & Source Cards if available
     if st.session_state.assistant_answer:
         ans = st.session_state.assistant_answer
-        st.markdown("<div style='margin-top:12px; padding:14px 18px; background:var(--bg-surface); border-radius:10px; border:1px solid var(--border-fine);'>", unsafe_allow_html=True)
+        st.markdown("<div style='margin-top:14px; padding:16px 20px; background:#FFFFFF; border-radius:14px; border:1px solid var(--border-delicate); box-shadow:var(--shadow-subtle);'>", unsafe_allow_html=True)
         st.markdown(f"**Answer:**\n\n{ans.get('answer', 'No answer generated.')}")
-        
+
         used_chunks = ans.get("used_chunks", [])
         if used_chunks:
-            st.markdown("<div style='font-size:0.75rem; font-weight:700; color:var(--accent-crimson); margin-top:10px;'>📎 Retrieved Evidence:</div>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size:0.78rem; font-weight:800; color:var(--brand-deep-jade); margin-top:12px; margin-bottom:6px;'>📎 Verified Sources & Evidence:</div>", unsafe_allow_html=True)
             for i, chk in enumerate(used_chunks, 1):
                 p_num = chk.get("page_number", "?")
                 fname = chk.get("filename", "Document")
                 score = chk.get("score", 0.0)
-                snip = truncate_text(chk.get("text", ""), 220)
-                with st.expander(f"[S{i}] {fname} · Page {p_num} (Score: {score:.3f})"):
+                snip = truncate_text(chk.get("text", ""), 240)
+                with st.expander(f"[S{i}] {fname} · Page {p_num} (Relevance Score: {score:.3f})"):
                     st.caption(snip)
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -402,8 +415,8 @@ with col_rail:
 
 <a href="./Summaries" target="_self" class="quick-action-card">
 <div class="quick-action-left">
-<div class="qa-icon-box crimson">
-<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<div class="qa-icon-box jade">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
 <polyline points="14 2 14 8 20 8"></polyline>
 <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -412,7 +425,7 @@ with col_rail:
 </div>
 <div class="qa-text-col">
 <span class="qa-title">Summarize Documents</span>
-<span class="qa-desc">Extract key insights and highlights</span>
+<span class="qa-desc">Extract key insights and findings</span>
 </div>
 </div>
 <span class="qa-chevron">›</span>
@@ -420,8 +433,8 @@ with col_rail:
 
 <a href="./Chat" target="_self" class="quick-action-card">
 <div class="quick-action-left">
-<div class="qa-icon-box cyan">
-<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<div class="qa-icon-box blue">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
 </svg>
 </div>
@@ -436,7 +449,7 @@ with col_rail:
 <a href="./Documents" target="_self" class="quick-action-card">
 <div class="quick-action-left">
 <div class="qa-icon-box violet">
-<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
 </svg>
 </div>
@@ -451,7 +464,7 @@ with col_rail:
 <a href="./Analytics" target="_self" class="quick-action-card">
 <div class="quick-action-left">
 <div class="qa-icon-box emerald">
-<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
 <line x1="18" y1="20" x2="18" y2="10"></line>
 <line x1="12" y1="20" x2="12" y2="4"></line>
 <line x1="6" y1="20" x2="6" y2="14"></line>
@@ -481,9 +494,9 @@ with col_rail:
     queries_list = [
         "Summarize this document",
         "What are the key findings?",
-        "Find specific information in this document",
-        "Show me the sources for this answer.",
-        "What are the main topics?",
+        "Find specific risk factors",
+        "Show me verified sources",
+        "Extract financial drivers",
     ]
 
     for q_item in queries_list:
@@ -497,7 +510,7 @@ with col_rail:
     st.markdown(
         """<div class="alfred-security-card">
 <div class="security-card-header">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F0445E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#155E52" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
 </svg>
 <span>Enterprise Data Enclave</span>

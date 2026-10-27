@@ -8,11 +8,11 @@ enableXsrfProtection = false
 showSidebarNav = false
 
 [theme]
-base = "dark"
-primaryColor = "#E5485D"
-backgroundColor = "#101114"
-secondaryBackgroundColor = "#0C0D10"
-textColor = "#F4F5F7"
+base = "light"
+primaryColor = "#155E52"
+backgroundColor = "#F2F8F3"
+secondaryBackgroundColor = "#EAF4ED"
+textColor = "#20372F"
 font = "sans serif"
 
 [browser]

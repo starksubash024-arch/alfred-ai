@@ -1,6 +1,6 @@
 """
 components/sidebar.py — ALFRED AI Left Sidebar Navigation
-Signature Edition with Butler Crest & Black Titanium Surfaces
+Aurora Mint Edition with Butler Crest & Pearl Mint Surfaces
 """
 
 import streamlit as st
@@ -16,13 +16,13 @@ def _load_css() -> None:
     """Inject the custom CSS with stationary background texture."""
     css_path = Path(__file__).parent.parent / "styles" / "custom.css"
     if css_path.exists():
-        titanium_uri = get_asset_uri("alfred_titanium_bg.jpg")
+        aurora_uri = get_asset_uri("alfred_aurora_bg.jpg")
         css_text = css_path.read_text(encoding="utf-8")
         extra_vars = f"""
         :root {{
-            --bg-titanium-uri: url('{titanium_uri}');
+            --bg-aurora-uri: url('{aurora_uri}');
         }}
-        """ if titanium_uri else ""
+        """ if aurora_uri else ""
         st.markdown(f"<style>{extra_vars}\n{css_text}</style>", unsafe_allow_html=True)
 
 
@@ -72,11 +72,11 @@ def render_sidebar(active_page: str = "Dashboard") -> None:
         if ollama_status["available"]:
             model_ok = any(OLLAMA_MODEL in m for m in ollama_status["models"])
             disp_model = OLLAMA_MODEL if model_ok else (ollama_status["models"][0] if ollama_status["models"] else "offline")
-            conn_pill = '<span class="sidebar-status-pill online"><span style="font-size:7px;">●</span> Connected</span>'
-            model_label = f"model: {disp_model}"
+            conn_pill = '<span class="sidebar-status-pill online"><span style="font-size:7px;">●</span> Online</span>'
+            model_label = f"Model: {disp_model}"
         else:
-            conn_pill = '<span class="sidebar-status-pill offline"><span style="font-size:7px;">●</span> Offline</span>'
-            model_label = "Local RAG Mode"
+            conn_pill = '<span class="sidebar-status-pill offline"><span style="font-size:7px;">●</span> Local Mode</span>'
+            model_label = "Local RAG Active"
 
         st.markdown(
             f"""
@@ -105,11 +105,11 @@ def render_sidebar(active_page: str = "Dashboard") -> None:
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; margin-bottom:5px;">
                     <span style="color:var(--text-secondary); display:flex; align-items:center; gap:6px;">📄 Documents</span>
-                    <span style="font-weight:700; color:var(--text-primary);">{stats["doc_count"]}</span>
+                    <span style="font-weight:700; color:var(--text-deep-forest);">{stats["doc_count"]}</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem;">
                     <span style="color:var(--text-secondary); display:flex; align-items:center; gap:6px;">⚡ Index Status</span>
-                    <span style="font-weight:700; color:var(--accent-emerald);">Active</span>
+                    <span style="font-weight:700; color:var(--accent-emerald);">Optimal</span>
                 </div>
             </div>
             """,
@@ -120,8 +120,8 @@ def render_sidebar(active_page: str = "Dashboard") -> None:
         st.markdown(
             f"""
             <div class="sidebar-footer-box">
-                <div class="sidebar-footer-version">ALFRED AI Signature · v{APP_VERSION}</div>
-                <div>Air-Gapped Local Intelligence</div>
+                <div class="sidebar-footer-version">ALFRED AI · Aurora Mint v{APP_VERSION}</div>
+                <div>Intelligent Document Workspace</div>
             </div>
             """,
             unsafe_allow_html=True,

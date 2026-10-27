@@ -1,5 +1,6 @@
 """
 pages/4_Analytics.py — Analytics Dashboard
+Aurora Mint Edition with Colorful, Real-Time Business Intelligence
 
 All charts use real data from SQLite / analytics.py.
 No fake statistics are ever shown.
@@ -21,6 +22,7 @@ from components.charts import (
     score_histogram,
     evaluation_bar_chart,
 )
+from components.assets_loader import get_asset_uri
 from config import APP_NAME
 
 st.set_page_config(
@@ -33,7 +35,10 @@ st.set_page_config(
 def load_css():
     p = Path(__file__).parent.parent / "styles" / "custom.css"
     if p.exists():
-        st.markdown(f"<style>{p.read_text(encoding='utf-8')}</style>", unsafe_allow_html=True)
+        aurora_uri = get_asset_uri("alfred_aurora_bg.jpg")
+        css_text = p.read_text(encoding="utf-8")
+        extra_vars = f":root {{ --bg-aurora-uri: url('{aurora_uri}'); }}" if aurora_uri else ""
+        st.markdown(f"<style>{extra_vars}\n{css_text}</style>", unsafe_allow_html=True)
 
 load_css()
 render_sidebar(active_page="Analytics")
@@ -41,7 +46,7 @@ render_sidebar(active_page="Analytics")
 st.markdown(
     """
     <div class="page-title">Workspace Analytics</div>
-    <div class="page-subtitle">Real-time retrieval metrics and document corpus distributions.</div>
+    <div class="page-subtitle">Real-time retrieval metrics, ingestion distributions, and model performance.</div>
     """,
     unsafe_allow_html=True,
 )
@@ -53,38 +58,51 @@ query_tl     = analytics.get_query_timeline(days=30)
 insights     = analytics.get_insights()
 eval_history = analytics.get_evaluation_history()
 
-# ── Insight cards ──────────────────────────────────────────────────────────────
+# ── Colorful Semantic Insight cards ───────────────────────────────────────────
 ic1, ic2, ic3, ic4 = st.columns(4)
 cards = [
-    (ic1, insights["total_indexed_pages"],  "Indexed Pages"),
-    (ic2, insights["total_indexed_chunks"], "Indexed Chunks"),
-    (ic3, insights["total_queries"],         "Total Queries"),
-    (ic4, insights.get("most_recent_doc") or "—", "Latest Document"),
+    (ic1, insights["total_indexed_pages"],  "Indexed Pages",   "card-sky-blue", "#65B8F5"),
+    (ic2, insights["total_indexed_chunks"], "Indexed Chunks",  "card-violet",   "#A99AF7"),
+    (ic3, insights["total_queries"],         "Total Queries",   "card-emerald",  "#32B985"),
+    (ic4, insights.get("most_recent_doc") or "—", "Latest Document", "card-mint-hero", "#155E52"),
 ]
-for col, val, label in cards:
+for col, val, label, card_cls, accent_col in cards:
     with col:
         display_val = f"{val:,}" if isinstance(val, int) else str(val)
-        st.markdown(
-            f"""
-            <div class="metric-box" style="padding:1rem;">
-                <div class="metric-value" style="font-size:1.6rem; margin-bottom:0.2rem;">{display_val}</div>
-                <div class="metric-label">{label}</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        if card_cls == "card-mint-hero":
+            st.markdown(
+                f"""
+                <div class="metric-box card-mint-hero" style="padding:1.1rem 1.25rem;">
+                    <div class="metric-label" style="margin-bottom:0.3rem;">{label}</div>
+                    <div class="metric-value" style="font-size:1.4rem; margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{display_val}</div>
+                    <div class="metric-footnote">Most recent intake</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+        else:
+            st.markdown(
+                f"""
+                <div class="metric-box {card_cls}" style="padding:1.1rem 1.25rem;">
+                    <div class="metric-label" style="margin-bottom:0.3rem;">{label}</div>
+                    <div class="metric-value" style="font-size:1.8rem; margin-bottom:0.2rem;">{display_val}</div>
+                    <div class="metric-footnote">Verified real data</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
-st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
 
 if not doc_stats:
     st.markdown(
         """
-        <div class="empty-state">
-            <div class="empty-state-icon">📊</div>
-            <div class="empty-state-title">No data to display yet</div>
-            <div class="empty-state-text">
-                Upload and index documents, then ask some questions.
-                Charts will appear here using your real data.
+        <div class="panel-empty-state" style="background:#FFFFFF; border:1px solid var(--border-delicate); border-radius:14px; padding:3rem 1rem;">
+            <div class="panel-empty-icon-circle">📊</div>
+            <div class="panel-empty-title">No analytics data yet</div>
+            <div class="panel-empty-sub">
+                Upload and index documents on the Dashboard, then ask questions in Chat.
+                Charts will automatically populate using your verified corporate data.
             </div>
         </div>
         """,
@@ -134,8 +152,8 @@ if eval_history:
         st.plotly_chart(fig, use_container_width=True)
 
 # ── Document details table ─────────────────────────────────────────────────────
-st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown("### Document Detail Table")
+st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
+st.markdown("<h3 style='color:var(--text-deep-forest); font-size:1.15rem; font-weight:800;'>Document Ingestion Ledger</h3>", unsafe_allow_html=True)
 
 import pandas as pd
 from utils import human_readable_size
