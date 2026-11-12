@@ -1,24 +1,26 @@
-# 🧠 RAG Document Assistant
+# 🛡️ ALFRED AI — Intelligent Document Workspace
 
-> **Your documents. One intelligent workspace.**
+> **Your knowledge, connected. Your decisions, better informed.**
 
-A local-first AI web application that lets you upload PDF documents, ask questions about them, and receive answers grounded in the exact source pages — all running on your own machine with no paid API keys.
+An enterprise-grade, air-gapped RAG (Retrieval-Augmented Generation) document assistant and business intelligence workspace. Upload corporate PDFs, execute deep semantic search, generate source-grounded answers with verifiable citations (`[S1]`, `[S2]`), and extract executive briefs — 100% locally with zero cloud dependencies.
+
+Featuring the **Aurora Mint** executive design system inspired by modern analytics platforms, with custom Butler Crest branding, stationary embossed geometric textures, and real-time Plotly data visualizations.
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
 | Feature | Description |
 |---------|-------------|
-| 📄 PDF Upload | Multi-file upload with validation, duplicate detection, progress tracking |
-| 🧩 Smart Chunking | Configurable overlapping text chunks with full provenance metadata |
-| 🔍 Semantic Search | FAISS vector search with Sentence Transformers embeddings |
-| 💬 Grounded Chat | Local LLM answers with `[S1]` `[S2]` citations mapped to real source pages |
-| 📝 Summaries | Map-reduce summarisation with executive summary, key points, definitions |
-| 📊 Analytics | Real Plotly charts — pages, chunks, query timeline (no fake data) |
-| 🧪 Evaluation | Hit Rate@k and MRR metrics against your own test cases |
-| 💾 Persistence | SQLite database survives app restarts |
-| 🎨 Premium UI | Dark navy theme, glass panels, KPI cards, polished empty states |
+| 📄 **Document Intake** | Multi-file PDF ingestion with SHA-256 deduplication, PyMuPDF extraction, and real-time progress callbacks |
+| 🧩 **Sliding-Window Chunking** | Configurable overlapping text chunks with full page-level provenance metadata |
+| 🔍 **Vector Retrieval** | FAISS `IndexFlatIP` index with normalized 384-dimensional dense embeddings (`all-MiniLM-L6-v2`) |
+| 💬 **Grounded Chat** | Local LLM generation (via Ollama) with strict citation verification and expandable evidence cards |
+| 📝 **Dual-Engine Summaries** | Instant extractive summarization for offline speeds + Map-Reduce AI synthesis for executive briefs |
+| 📊 **Workspace Analytics** | Real Plotly charts for corpus distribution, ingestion ledgers, and query timelines (no mock data) |
+| 🧪 **Retrieval Evaluation** | Automated Hit Rate@k and Mean Reciprocal Rank (MRR) benchmarking suite |
+| 🛡️ **Air-Gapped Privacy** | 100% on-premise execution; SQLite persistence and local FAISS indices survive app restarts |
+| 🎨 **Aurora Mint UI** | Pearl mint surfaces, deep jade branding, semantic analytics cards, and stationary embossed scale textures |
 
 ---
 
